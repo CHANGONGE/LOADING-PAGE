@@ -6,28 +6,30 @@
     <title>최재원 | AI Business Consultant</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* [1] 기본 테마 색상 유지 */
+        /* [1] 프리미엄 다크 글래스 테마 (index_backup.html 사양) */
         :root {
-            --primary-navy: #003366;
-            --accent-gold: #d4af37;
-            --bg-light: #f4f6f9;
+            --primary-navy: #05080A; /* 딥 다크 배경 */
+            --accent-gold: #D4AF37;
+            --text-main: #FFFFFF;
+            --text-muted: rgba(255, 255, 255, 0.6);
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
             --transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         * { box-sizing: border-box; }
         body, html { 
             margin: 0; padding: 0; width: 100%; height: 100%; 
-            background-color: var(--bg-light); 
+            background-color: var(--primary-navy); 
             font-family: 'Noto Sans KR', sans-serif; 
+            color: var(--text-main);
             overflow: hidden; 
         }
 
-        /* [2] 동적 배경 (original.html 사양) */
+        /* [2] 동적 배경 (다크 테마 최적화) */
         #bg {
             position: fixed; inset: 0; z-index: 0; overflow: hidden;
-            background: radial-gradient(ellipse at 20% 20%, rgba(0,51,102,0.06) 0%, transparent 60%),
-                        radial-gradient(ellipse at 80% 80%, rgba(212,175,55,0.06) 0%, transparent 60%),
-                        #f2f5f9;
+            background: radial-gradient(circle at 50% 50%, #0a1118 0%, #05080a 100%);
         }
         .blob {
             position: absolute; border-radius: 50%;
@@ -35,24 +37,24 @@
         }
         .blob-1 {
             width: 700px; height: 700px; top: -20%; left: -15%;
-            background: radial-gradient(circle, rgba(0,51,102,0.09) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.05) 0%, transparent 70%);
             animation: drift1 28s ease-in-out infinite alternate;
         }
         .blob-2 {
             width: 600px; height: 600px; bottom: -15%; right: -10%;
-            background: radial-gradient(circle, rgba(212,175,55,0.10) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(0, 51, 102, 0.2) 0%, transparent 70%);
             animation: drift2 35s ease-in-out infinite alternate;
         }
         .blob-3 {
             width: 400px; height: 400px; top: 40%; left: 50%;
-            background: radial-gradient(circle, rgba(0,51,102,0.05) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.03) 0%, transparent 70%);
             animation: drift3 22s ease-in-out infinite alternate;
         }
         @keyframes drift1 { to { transform: translate(80px, 60px) scale(1.15); } }
         @keyframes drift2 { to { transform: translate(-70px, -50px) scale(1.1); } }
         @keyframes drift3 { to { transform: translate(40px, -80px) scale(0.9); } }
 
-        /* [3] 로딩 레이어 고도화 (original.html 사양) */
+        /* [3] 로딩 레이어 고도화 (다크 테마 유지) */
         #loader {
             position: fixed; inset: 0; z-index: 9999;
             background: #03090F;
@@ -109,17 +111,10 @@
             animation: pulse 2s ease-in-out infinite 0.5s;
         }
 
-        /* 데이터 파티클 */
-        .particles {
-            position: absolute; inset: 0; pointer-events: none; overflow: hidden;
-        }
+        .particles { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
         .particle {
-            position: absolute;
-            width: 1px; height: 1px;
-            background: var(--accent-gold);
-            border-radius: 50%;
-            opacity: 0;
-            animation: float-up var(--dur, 4s) linear var(--delay, 0s) infinite;
+            position: absolute; width: 1px; height: 1px; background: var(--accent-gold); border-radius: 50%;
+            opacity: 0; animation: float-up var(--dur, 4s) linear var(--delay, 0s) infinite;
         }
         @keyframes float-up {
             0%   { opacity: 0; transform: translateY(100vh) translateX(0); }
@@ -138,67 +133,103 @@
         }
         body.loaded #main-content { opacity: 1; transform: translateY(0); }
 
-        /* [5] 기존 프로필 카드 디자인 유지 + 호버 기능 추가 */
+        /* [5] 글래스모피즘 카드 디자인 */
         .container { 
-            width: 100%; max-width: 420px; background: white; border-radius: 40px; 
-            overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.1); 
+            width: 100%; max-width: 440px; 
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px) saturate(1.8);
+            -webkit-backdrop-filter: blur(25px) saturate(1.8);
+            border-radius: 40px; 
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
             margin-top: 20px; margin-bottom: 50px; 
             transition: var(--transition);
         }
         
-        .header { background-color: var(--primary-navy); padding: 50px 20px 40px; text-align: center; color: white; }
+        .header { 
+            background: linear-gradient(180deg, rgba(212, 175, 55, 0.05) 0%, transparent 100%);
+            padding: 50px 20px 40px; text-align: center; 
+        }
         .profile-frame { 
-            width: 160px; height: 160px; border-radius: 50%; border: 4px solid var(--accent-gold); 
-            margin: 0 auto 25px; overflow: hidden; background: #222; 
+            width: 160px; height: 160px; border-radius: 50%; 
+            border: 2px solid var(--accent-gold); 
+            padding: 5px; background: rgba(0,0,0,0.3);
+            margin: 0 auto 25px; overflow: hidden; 
             transition: transform 0.5s ease;
         }
         .profile-frame:hover { transform: scale(1.05); }
-        .profile-frame img { width: 100%; height: 100%; object-fit: cover; }
-        .name { font-size: 28px; font-weight: 700; margin-bottom: 8px; letter-spacing: 6px; }
-        .job-title { color: var(--accent-gold); font-weight: 700; font-size: 16px; margin-bottom: 6px; }
+        .profile-frame img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+        .name { font-size: 28px; font-weight: 700; margin-bottom: 8px; letter-spacing: 6px; color: #fff; }
+        .job-title { color: var(--accent-gold); font-weight: 700; font-size: 16px; margin-bottom: 6px; letter-spacing: 2px; }
         
-        .section { padding: 25px 20px; border-bottom: 1px solid #f0f0f0; text-align: left; }
-        .section-title { font-size: 15px; font-weight: 700; color: var(--primary-navy); margin-bottom: 18px; border-left: 4px solid #007bff; padding-left: 10px; }
+        .section { padding: 25px 25px; border-bottom: 1px solid var(--glass-border); text-align: left; }
+        .section-title { 
+            font-size: 14px; font-weight: 700; color: var(--accent-gold); 
+            margin-bottom: 18px; border-left: 4px solid var(--accent-gold); padding-left: 10px; 
+            text-transform: uppercase; letter-spacing: 1px;
+        }
         
         .card { 
-            background: #f8faff; border-radius: 12px; padding: 15px; margin-bottom: 12px; 
-            border-left: 4px solid #007bff; transition: var(--transition);
+            background: rgba(255, 255, 255, 0.02); border: 1px solid var(--glass-border);
+            border-radius: 16px; padding: 18px; margin-bottom: 12px; 
+            transition: var(--transition);
         }
-        .card:hover { transform: translateX(5px); background: #f0f4ff; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-        .card.gold { border-left-color: var(--accent-gold); }
-        .card h4 { margin: 0 0 6px 0; color: #007bff; font-size: 15px; }
-        .card.gold h4 { color: var(--accent-gold); }
-        .card p { margin: 0; font-size: 12.5px; color: #555; line-height: 1.6; }
+        .card:hover { 
+            background: rgba(255, 255, 255, 0.05); 
+            transform: translateX(5px); 
+            border-color: rgba(212, 175, 55, 0.3);
+        }
+        .card.gold { border-left: 4px solid var(--accent-gold); }
+        .card h4 { margin: 0 0 6px 0; color: #fff; font-size: 15px; }
+        .card p { margin: 0; font-size: 12.5px; color: var(--text-muted); line-height: 1.7; }
 
         /* 온라인 마케팅 디테일 */
-        .marketing-desc { font-size: 11.5px; color: #666; font-style: italic; margin-bottom: 15px; text-align: center; }
+        .marketing-desc { font-size: 11.5px; color: var(--accent-gold); font-style: italic; margin-bottom: 15px; text-align: center; opacity: 0.8; }
         .sub-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-        .sub-card { background: #fdfdfd; border: 1px solid #eee; border-radius: 10px; padding: 12px; text-align: center; transition: var(--transition); }
+        .sub-card { 
+            background: rgba(255, 255, 255, 0.01); border: 1px solid var(--glass-border);
+            border-radius: 12px; padding: 12px; text-align: center; transition: var(--transition); 
+        }
         .sub-card:hover { border-color: var(--accent-gold); transform: translateY(-3px); }
-        .sub-card h5 { margin: 0 0 4px 0; font-size: 13px; color: #333; }
-        .sub-card p { margin: 0; font-size: 10.5px; color: #888; }
+        .sub-card h5 { margin: 0 0 4px 0; font-size: 13px; color: #fff; }
+        .sub-card p { margin: 0; font-size: 10.5px; color: var(--text-muted); }
 
-        .badge-container { display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; }
-        .badge { padding: 4px 10px; border-radius: 15px; font-size: 10px; color: white; font-weight: bold; transition: opacity 0.3s; }
-        .badge:hover { opacity: 0.8; cursor: default; }
+        .badge-container { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+        .badge { 
+            padding: 5px 12px; border-radius: 15px; font-size: 10.5px; 
+            background: rgba(255, 255, 255, 0.05); border: 1px solid var(--glass-border);
+            color: var(--text-muted); font-weight: 500; transition: var(--transition); 
+        }
+        .badge:hover { color: #fff; border-color: var(--accent-gold); background: rgba(212, 175, 55, 0.1); }
+
+        /* Professional Background */
+        .exp-list { list-style: none; padding: 0 0 0 10px; margin: 0; }
+        .exp-item { 
+            font-size: 13px; line-height: 2; color: var(--text-muted); margin-bottom: 8px;
+            display: flex; gap: 10px; align-items: flex-start;
+        }
+        .exp-item::before { content: '✓'; color: var(--accent-gold); font-weight: bold; }
 
         /* 버튼 영역 */
-        .btn-container { display: flex; gap: 12px; padding: 25px 20px; }
+        .btn-container { display: flex; gap: 12px; padding: 25px 25px 35px; }
         .btn { 
-            flex: 1; padding: 14px; border-radius: 12px; border: none; font-weight: 700; 
-            display: flex; align-items: center; justify-content: center; gap: 8px; 
+            flex: 1; padding: 15px; border-radius: 16px; border: 1px solid var(--glass-border);
+            font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 10px; 
             font-size: 14px; cursor: pointer; transition: var(--transition);
-            background-color: var(--primary-navy); color: white; 
+            background: rgba(255, 255, 255, 0.05); color: #fff; 
+            text-decoration: none;
         }
-        .btn:hover { opacity: 0.9; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,51,102,0.2); }
+        .btn-primary { background: var(--accent-gold); color: #05080A; border: none; }
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+        .btn-primary:hover { opacity: 0.9; }
 
         /* 푸터 스타일 */
-        .footer { padding: 30px 20px; text-align: center; border-top: 1px solid #f0f0f0; background: #fafafa; }
-        .footer-main { margin: 0 0 10px 0; font-size: 13px; color: #444; font-weight: 500; line-height: 1.5; }
-        .footer-copy { margin: 0; font-size: 11px; color: #999; letter-spacing: 1px; }
+        .footer { padding: 30px 25px; text-align: center; border-top: 1px solid var(--glass-border); background: rgba(255,255,255,0.01); }
+        .footer-main { margin: 0 0 10px 0; font-size: 13px; color: var(--text-muted); font-weight: 500; line-height: 1.6; }
+        .footer-copy { margin: 0; font-size: 11px; color: rgba(255,255,255,0.2); letter-spacing: 1px; }
 
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        @keyframes pulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
     </style>
 </head>
 <body>

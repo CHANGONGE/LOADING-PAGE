@@ -6,90 +6,221 @@
     <title>최재원 | AI Business Consultant</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* [1] 레이어 스택 설정: 본문은 깔아두고 로더만 위에 덮음 */
-        * { box-sizing: border-box; }
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background-color: #f4f6f9; font-family: 'Noto Sans KR', sans-serif; overflow: hidden; }
+        /* [1] 기본 테마 색상 유지 */
+        :root {
+            --primary-navy: #003366;
+            --accent-gold: #d4af37;
+            --bg-light: #f4f6f9;
+            --transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
 
-        /* [2] 메인 컨텐츠 (이미 로딩되어 로더 밑에 대기 중) */
+        * { box-sizing: border-box; }
+        body, html { 
+            margin: 0; padding: 0; width: 100%; height: 100%; 
+            background-color: var(--bg-light); 
+            font-family: 'Noto Sans KR', sans-serif; 
+            overflow: hidden; 
+        }
+
+        /* [2] 동적 배경 (original.html 사양) */
+        #bg {
+            position: fixed; inset: 0; z-index: 0; overflow: hidden;
+            background: radial-gradient(ellipse at 20% 20%, rgba(0,51,102,0.06) 0%, transparent 60%),
+                        radial-gradient(ellipse at 80% 80%, rgba(212,175,55,0.06) 0%, transparent 60%),
+                        #f2f5f9;
+        }
+        .blob {
+            position: absolute; border-radius: 50%;
+            filter: blur(80px); pointer-events: none; transition: transform 0.1s linear;
+        }
+        .blob-1 {
+            width: 700px; height: 700px; top: -20%; left: -15%;
+            background: radial-gradient(circle, rgba(0,51,102,0.09) 0%, transparent 70%);
+            animation: drift1 28s ease-in-out infinite alternate;
+        }
+        .blob-2 {
+            width: 600px; height: 600px; bottom: -15%; right: -10%;
+            background: radial-gradient(circle, rgba(212,175,55,0.10) 0%, transparent 70%);
+            animation: drift2 35s ease-in-out infinite alternate;
+        }
+        .blob-3 {
+            width: 400px; height: 400px; top: 40%; left: 50%;
+            background: radial-gradient(circle, rgba(0,51,102,0.05) 0%, transparent 70%);
+            animation: drift3 22s ease-in-out infinite alternate;
+        }
+        @keyframes drift1 { to { transform: translate(80px, 60px) scale(1.15); } }
+        @keyframes drift2 { to { transform: translate(-70px, -50px) scale(1.1); } }
+        @keyframes drift3 { to { transform: translate(40px, -80px) scale(0.9); } }
+
+        /* [3] 로딩 레이어 고도화 (original.html 사양) */
+        #loader {
+            position: fixed; inset: 0; z-index: 9999;
+            background: #03090F;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center; gap: 28px;
+            transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .loader-rings {
+            position: relative; width: 180px; height: 180px;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .ring {
+            position: absolute; border-radius: 50%;
+            border: 2px solid transparent;
+        }
+        .ring-1 {
+            width: 180px; height: 180px;
+            border-top-color: var(--accent-gold);
+            animation: spin 1.6s linear infinite;
+        }
+        .ring-2 {
+            width: 140px; height: 140px;
+            border-top-color: rgba(212, 175, 55, 0.5);
+            border-right-color: rgba(212, 175, 55, 0.2);
+            animation: spin 2.4s linear infinite reverse;
+        }
+        .ring-3 {
+            width: 100px; height: 100px;
+            border-top-color: rgba(212, 175, 55, 0.25);
+            animation: spin 3.2s linear infinite;
+        }
+        .ring-dot {
+            width: 6px; height: 6px; border-radius: 50%;
+            background: var(--accent-gold);
+            box-shadow: 0 0 12px var(--accent-gold), 0 0 24px rgba(212,175,55,0.4);
+        }
+
+        .loader-text {
+            font-family: 'Cinzel', serif;
+            color: var(--accent-gold);
+            font-size: 1.1rem;
+            letter-spacing: 6px;
+            text-align: center;
+            line-height: 1.7;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .loader-sub {
+            color: rgba(255,255,255,0.3);
+            font-size: 0.65rem;
+            letter-spacing: 8px;
+            font-family: 'Cinzel', serif;
+            animation: pulse 2s ease-in-out infinite 0.5s;
+        }
+
+        /* 데이터 파티클 */
+        .particles {
+            position: absolute; inset: 0; pointer-events: none; overflow: hidden;
+        }
+        .particle {
+            position: absolute;
+            width: 1px; height: 1px;
+            background: var(--accent-gold);
+            border-radius: 50%;
+            opacity: 0;
+            animation: float-up var(--dur, 4s) linear var(--delay, 0s) infinite;
+        }
+        @keyframes float-up {
+            0%   { opacity: 0; transform: translateY(100vh) translateX(0); }
+            10%  { opacity: 0.6; }
+            90%  { opacity: 0.4; }
+            100% { opacity: 0; transform: translateY(-10vh) translateX(var(--drift, 20px)); }
+        }
+
+        /* [4] 메인 컨텐츠 등장 애니메이션 */
         #main-content {
             width: 100%; height: 100%; overflow-y: auto;
             display: flex; justify-content: center; align-items: flex-start;
             padding: 20px 10px;
+            opacity: 0; transform: translateY(20px);
+            transition: var(--transition);
         }
+        body.loaded #main-content { opacity: 1; transform: translateY(0); }
 
-        /* [3] 골드 로더: 중앙 정렬 및 최상위 고정 */
-        #loader-layer {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #05080A; z-index: 9999;
-            display: flex; justify-content: center; align-items: center;
-            transition: opacity 1s ease-out; pointer-events: none;
+        /* [5] 기존 프로필 카드 디자인 유지 + 호버 기능 추가 */
+        .container { 
+            width: 100%; max-width: 420px; background: white; border-radius: 40px; 
+            overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.1); 
+            margin-top: 20px; margin-bottom: 50px; 
+            transition: var(--transition);
         }
-        .loader-wrapper {
-            position: relative; width: 300px; height: 300px;
-            display: flex; justify-content: center; align-items: center;
+        
+        .header { background-color: var(--primary-navy); padding: 50px 20px 40px; text-align: center; color: white; }
+        .profile-frame { 
+            width: 160px; height: 160px; border-radius: 50%; border: 4px solid var(--accent-gold); 
+            margin: 0 auto 25px; overflow: hidden; background: #222; 
+            transition: transform 0.5s ease;
         }
-        .circle-loader {
-            position: absolute; width: 100%; height: 100%;
-            border: 2px solid transparent; border-top: 2px solid #D4AF37;
-            border-radius: 50%; animation: spin 2s linear infinite; top: 0; left: 0;
-        }
-        .circle-loader::before {
-            content: ''; position: absolute; top: 12px; left: 12px; right: 12px; bottom: 12px;
-            border: 1px solid transparent; border-top: 1px solid #F4E0AF;
-            border-radius: 50%; animation: spin 3.5s linear infinite;
-        }
-        .loader-content { text-align: center; font-family: 'Cinzel', serif; z-index: 10; }
-        .loader-content h1 { color: #D4AF37; font-size: 1.4rem; letter-spacing: 4px; margin: 0; }
-
-        /* [4] 프로필 카드 (업로드해주신 이미지 내용 100% 반영) */
-        .container { width: 100%; max-width: 420px; background: white; border-radius: 40px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.1); margin-bottom: 50px; }
-        .header { background-color: #003366; padding: 50px 20px 40px; text-align: center; color: white; }
-        .profile-frame { width: 160px; height: 160px; border-radius: 50%; border: 4px solid #d4af37; margin: 0 auto 25px; overflow: hidden; background: #222; }
+        .profile-frame:hover { transform: scale(1.05); }
         .profile-frame img { width: 100%; height: 100%; object-fit: cover; }
         .name { font-size: 28px; font-weight: 700; margin-bottom: 8px; letter-spacing: 6px; }
-        .job-title { color: #d4af37; font-weight: 700; font-size: 16px; margin-bottom: 6px; }
-        .slogan { font-size: 12px; opacity: 0.8; font-weight: 300; }
-
+        .job-title { color: var(--accent-gold); font-weight: 700; font-size: 16px; margin-bottom: 6px; }
+        
         .section { padding: 25px 20px; border-bottom: 1px solid #f0f0f0; text-align: left; }
-        .section-title { font-size: 15px; font-weight: 700; color: #003366; margin-bottom: 18px; border-left: 4px solid #007bff; padding-left: 10px; }
-
-        /* 이미지에 있던 전문 분야 상세 내용 */
-        .card { background: #f8faff; border-radius: 12px; padding: 15px; margin-bottom: 12px; border-left: 4px solid #007bff; }
-        .card.gold { border-left-color: #d4af37; }
+        .section-title { font-size: 15px; font-weight: 700; color: var(--primary-navy); margin-bottom: 18px; border-left: 4px solid #007bff; padding-left: 10px; }
+        
+        .card { 
+            background: #f8faff; border-radius: 12px; padding: 15px; margin-bottom: 12px; 
+            border-left: 4px solid #007bff; transition: var(--transition);
+        }
+        .card:hover { transform: translateX(5px); background: #f0f4ff; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .card.gold { border-left-color: var(--accent-gold); }
         .card h4 { margin: 0 0 6px 0; color: #007bff; font-size: 15px; }
-        .card.gold h4 { color: #d4af37; }
+        .card.gold h4 { color: var(--accent-gold); }
         .card p { margin: 0; font-size: 12.5px; color: #555; line-height: 1.6; }
 
-        /* 온라인 마케팅 섹션 (이미지 완벽 복구) */
+        /* 온라인 마케팅 디테일 */
         .marketing-desc { font-size: 11.5px; color: #666; font-style: italic; margin-bottom: 15px; text-align: center; }
         .sub-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-        .sub-card { background: #fdfdfd; border: 1px solid #eee; border-radius: 10px; padding: 12px; text-align: center; }
+        .sub-card { background: #fdfdfd; border: 1px solid #eee; border-radius: 10px; padding: 12px; text-align: center; transition: var(--transition); }
+        .sub-card:hover { border-color: var(--accent-gold); transform: translateY(-3px); }
         .sub-card h5 { margin: 0 0 4px 0; font-size: 13px; color: #333; }
         .sub-card p { margin: 0; font-size: 10.5px; color: #888; }
 
         .badge-container { display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; }
-        .badge { padding: 4px 10px; border-radius: 15px; font-size: 10px; color: white; font-weight: bold; }
+        .badge { padding: 4px 10px; border-radius: 15px; font-size: 10px; color: white; font-weight: bold; transition: opacity 0.3s; }
+        .badge:hover { opacity: 0.8; cursor: default; }
 
-        /* [5] 버튼 영역: 푸른색 통일 (#003366) */
+        /* 버튼 영역 */
         .btn-container { display: flex; gap: 12px; padding: 25px 20px; }
         .btn { 
             flex: 1; padding: 14px; border-radius: 12px; border: none; font-weight: 700; 
             display: flex; align-items: center; justify-content: center; gap: 8px; 
-            font-size: 14px; cursor: pointer; transition: 0.3s;
-            background-color: #003366; color: white; 
+            font-size: 14px; cursor: pointer; transition: var(--transition);
+            background-color: var(--primary-navy); color: white; 
         }
-        .btn:hover { opacity: 0.9; transform: translateY(-2px); }
+        .btn:hover { opacity: 0.9; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,51,102,0.2); }
+
+        /* 푸터 스타일 */
+        .footer { padding: 30px 20px; text-align: center; border-top: 1px solid #f0f0f0; background: #fafafa; }
+        .footer-main { margin: 0 0 10px 0; font-size: 13px; color: #444; font-weight: 500; line-height: 1.5; }
+        .footer-copy { margin: 0; font-size: 11px; color: #999; letter-spacing: 1px; }
 
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes pulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
     </style>
 </head>
 <body>
 
-    <div id="loader-layer">
-        <div class="loader-wrapper">
-            <div class="circle-loader"></div>
-            <div class="loader-content"><h1>AI BUSINESS<br>ARCHITECT</h1></div>
+    <!-- 동적 배경 -->
+    <div id="bg">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <!-- 로딩 레이어 -->
+    <div id="loader">
+        <div class="particles" id="particles"></div>
+        <div class="loader-rings">
+            <div class="ring ring-1"></div>
+            <div class="ring ring-2"></div>
+            <div class="ring ring-3"></div>
+            <div class="ring-dot"></div>
         </div>
+        <div class="loader-text">AI BUSINESS<br>ARCHITECT</div>
+        <div class="loader-sub">INITIALIZING...</div>
     </div>
 
     <div id="main-content">
@@ -98,7 +229,7 @@
                 <div class="profile-frame"><img src="PROFILE.JPG" alt="최재원"></div>
                 <div class="name">최 재 원</div>
                 <div class="job-title">AI BUSINESS CONSULTANT</div>
-                <div class="slogan">Data-Driven Intelligence & Strategy</div>
+                <div style="font-size: 12px; opacity: 0.8;">Data-Driven Intelligence & Strategy</div>
             </div>
 
             <div class="section">
@@ -132,7 +263,9 @@
 
             <div class="section">
                 <div class="section-title">Professional Background</div>
-                <div style="font-size: 12.5px; line-height: 2.2; color: #444;">
+                <div style="font-size: 12.5px; line-height: 2.2; color: #444; padding-left: 14px;">
+                    ✓ 현대 L&C : 분석계 OLAP시스템 구축<br>
+                    ✓ 현대제철 : BI 분석계 시스템 구축<br>
                     ✓ 현대모비스: 전동화 실적 분석 KPI 시스템 구축<br>
                     ✓ 삼성전자: G-ERP 재무/원가 BI 시스템 고도화 컨설팅<br>
                     ✓ 국도화학: 전산실장 역임 (ERP 및 IT 인프라 아키텍처 설계)<br>
@@ -141,22 +274,61 @@
             </div>
 
             <div class="btn-container">
-                <button class="btn">📩 이메일 보내기</button>
-                <button class="btn">📞 전화 걸기</button>
+                <button class="btn">📩 E-Mail</button>
+                <button class="btn">📞 Contact</button>
+            </div>
+
+            <div class="footer">
+                <p class="footer-main">"30년의 데이터 집요함이 AI 비즈니스의 정답을 찾습니다."</p>
+                <p class="footer-copy">© 2026 Choi Jae Won. All Rights Reserved.</p>
             </div>
         </div>
     </div>
 
     <script>
-        // 무조건 작동하는 강제 타이머 방식
-        setTimeout(function() {
-            const loader = document.getElementById('loader-layer');
-            loader.style.opacity = '0'; // 커튼을 걷음
-            
-            setTimeout(function() {
-                loader.style.display = 'none'; // 완전히 제거
-            }, 1000);
-        }, 3000);
+        // 파티클 생성
+        const container = document.getElementById('particles');
+        for (let i = 0; i < 40; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            p.style.cssText = `
+                left: ${Math.random() * 100}%;
+                width: ${Math.random() > 0.7 ? 2 : 1}px;
+                height: ${Math.random() > 0.7 ? 2 : 1}px;
+                --dur: ${3 + Math.random() * 5}s;
+                --delay: ${Math.random() * 4}s;
+                --drift: ${(Math.random() - 0.5) * 80}px;
+                opacity: 0;
+            `;
+            container.appendChild(p);
+        }
+
+        // 로딩 완료 후 전환
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const loader = document.getElementById('loader');
+                loader.style.opacity = '0';
+                loader.style.pointerEvents = 'none';
+                document.body.classList.add('loaded');
+                setTimeout(() => { loader.style.display = 'none'; }, 950);
+            }, 2200);
+        });
+
+        // 마우스 반응 배경 블롭
+        let rafId;
+        document.addEventListener('mousemove', (e) => {
+            cancelAnimationFrame(rafId);
+            rafId = requestAnimationFrame(() => {
+                const nx = e.clientX / window.innerWidth;
+                const ny = e.clientY / window.innerHeight;
+                document.querySelector('.blob-1').style.transform =
+                    `translate(${nx * 50}px, ${ny * 40}px)`;
+                document.querySelector('.blob-2').style.transform =
+                    `translate(${nx * -45}px, ${ny * -35}px)`;
+                document.querySelector('.blob-3').style.transform =
+                    `translate(${(nx - 0.5) * 60}px, ${(ny - 0.5) * 50}px)`;
+            });
+        });
     </script>
 </body>
 </html>
