@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>최재원 | AI Business Consultant</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy: #003366;
+            --navy-dark: #001f40;
+            --navy-light: #004080;
+            --gold: #D4AF37;
+            --gold-light: #F0D060;
+            --gold-pale: rgba(212, 175, 55, 0.15);
+            --bg: #f2f5f9;
+            --ease: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body {
+            width: 100%; height: 100%;
+            font-family: 'Noto Sans KR', sans-serif;
+            background: var(--bg);
+            overflow: hidden;
+        }
+
+        /* ── 동적 배경 ── */
+        #bg {
+            position: fixed; inset: 0; z-index: 0; overflow: hidden;
+            background: radial-gradient(ellipse at 20% 20%, rgba(0,51,102,0.06) 0%, transparent 60%),
+                        radial-gradient(ellipse at 80% 80%, rgba(212,175,55,0.06) 0%, transparent 60%),
+                        var(--bg);
+        }
+        .blob {
+            position: absolute; border-radius: 50%;
+            filter: blur(80px); pointer-events: none; transition: transform 0.1s linear;
+        }
+        .blob-1 {
+            width: 700px; height: 700px; top: -20%; left: -15%;
+            background: radial-gradient(circle, rgba(0,51,102,0.09) 0%, transparent 70%);
+            animation: drift1 28s ease-in-out infinite alternate;
+        }
+        .blob-2 {
+            width: 600px; height: 600px; bottom: -15%; right: -10%;
+            background: radial-gradient(circle, rgba(212,175,55,0.10) 0%, transparent 70%);
+            animation: drift2 35s ease-in-out infinite alternate;
+        }
+        .blob-3 {
+            width: 400px; height: 400px; top: 40%; left: 50%;
+            background: radial-gradient(circle, rgba(0,51,102,0.05) 0%, transparent 70%);
+            animation: drift3 22s ease-in-out infinite alternate;
+        }
+        @keyframes drift1 { to { transform: translate(80px, 60px) scale(1.15); } }
+        @keyframes drift2 { to { transform: translate(-70px, -50px) scale(1.1); } }
+        @keyframes drift3 { to { transform: translate(40px, -80px) scale(0.9); } }
+
+        /* ── 로딩 레이어 ── */
+        #loader {
+            position: fixed; inset: 0; z-index: 9999;
+            background: #03090F;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center; gap: 28px;
+            transition: opacity 0.9s var(--ease);
+        }
+
+        .loader-rings {
+            position: relative; width: 180px; height: 180px;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .ring {
+            position: absolute; border-radius: 50%;
+            border: 2px solid transparent;
+        }
+        .ring-1 {
+            width: 180px; height: 180px;
+            border-top-color: var(--gold);
+            animation: spin 1.6s linear infinite;
+        }
+        .ring-2 {
+            width: 140px; height: 140px;
+            border-top-color: rgba(212, 175, 55, 0.5);
+            border-right-color: rgba(212, 175, 55, 0.2);
+            animation: spin 2.4s linear infinite reverse;
+        }
+        .ring-3 {
+            width: 100px; height: 100px;
+            border-top-color: rgba(212, 175, 55, 0.25);
+            animation: spin 3.2s linear infinite;
+        }
+        .ring-dot {
+            width: 6px; height: 6px; border-radius: 50%;
+            background: var(--gold);
+            box-shadow: 0 0 12px var(--gold), 0 0 24px rgba(212,175,55,0.4);
+        }
+
+        .loader-text {
+            font-family: 'Cinzel', serif;
+            color: var(--gold);
+            font-size: 1.1rem;
+            letter-spacing: 6px;
+            text-align: center;
+            line-height: 1.7;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .loader-sub {
+            color: rgba(255,255,255,0.3);
+            font-size: 0.65rem;
+            letter-spacing: 8px;
+            font-family: 'Cinzel', serif;
+            animation: pulse 2s ease-in-out infinite 0.5s;
+        }
+
+        /* 데이터 파티클 */
+        .particles {
+            position: absolute; inset: 0; pointer-events: none; overflow: hidden;
+        }
+        .particle {
+            position: absolute;
+            width: 1px; height: 1px;
+            background: var(--gold);
+            border-radius: 50%;
+            opacity: 0;
+            animation: float-up var(--dur, 4s) linear var(--delay, 0s) infinite;
+        }
+        @keyframes float-up {
+            0%   { opacity: 0; transform: translateY(100vh) translateX(0); }
+            10%  { opacity: 0.6; }
+            90%  { opacity: 0.4; }
+            100% { opacity: 0; transform: translateY(-10vh) translateX(var(--drift, 20px)); }
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+
+        /* ── 메인 컨텐츠 ── */
+        #main {
+            position: relative; z-index: 1;
+            width: 100%; height: 100%;
+            overflow-y: auto; overflow-x: hidden;
+            display: flex; justify-content: center; align-items: flex-start;
+            padding: 28px 16px 60px;
+            opacity: 0; transform: translateY(24px);
+            transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
+            scrollbar-width: thin;
+            scrollbar-color: rgba(0,51,102,0.3) transparent;
+        }
+        #main::-webkit-scrollbar { width: 4px; }
+        #main::-webkit-scrollbar-thumb { background: rgba(0,51,102,0.3); border-radius: 2px; }
+
+        body.loaded #main { opacity: 1; transform: translateY(0); }
+
+        /* ── 카드 컨테이너 ── */
+        .card-wrap {
+            width: 100%; max-width: 430px;
+            border-radius: 36px;
+            background: rgba(255, 255, 255, 0.72);
+            backdrop-filter: blur(20px) saturate(1.4);
+            -webkit-backdrop-filter: blur(20px) saturate(1.4);
+            box-shadow:
+                0 4px 6px rgba(0,51,102,0.04),
+                0 12px 28px rgba(0,51,102,0.08),
+                0 32px 60px rgba(0,51,102,0.06),
+                inset 0 1px 0 rgba(255,255,255,0.9);
+            border: 1px solid rgba(255,255,255,0.6);
+            overflow: hidden;
+        }
+
+        /* ── 헤더 ── */
+        .header {
+            background: linear-gradient(160deg, var(--navy-dark) 0%, var(--navy) 55%, var(--navy-light) 100%);
+            padding: 52px 24px 44px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .header::before {
+            content: '';
+            position: absolute; inset: 0;
+            background:
+                radial-gradient(ellipse at 50% 0%, rgba(212,175,55,0.12) 0%, transparent 60%),
+                radial-gradient(ellipse at 100% 100%, rgba(212,175,55,0.06) 0%, transparent 50%);
+        }
+
+        .profile-ring {
+            width: 164px; height: 164px;
+            border-radius: 50%;
+            padding: 3px;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 50%, var(--gold) 100%);
+            margin: 0 auto 24px;
+            position: relative; z-index: 1;
+            box-shadow: 0 0 0 6px rgba(212,175,55,0.15), 0 8px 32px rgba(0,0,0,0.4);
+            transition: transform 0.5s var(--ease), box-shadow 0.5s var(--ease);
+        }
+        .profile-ring:hover {
+            transform: scale(1.04);
+            box-shadow: 0 0 0 8px rgba(212,175,55,0.2), 0 12px 40px rgba(0,0,0,0.5);
+        }
+        .profile-ring img {
+            width: 100%; height: 100%;
+            border-radius: 50%; object-fit: cover;
+            display: block;
+        }
+
+        .name {
+            font-size: 30px; font-weight: 700; color: #fff;
+            letter-spacing: 8px; margin-bottom: 10px;
+            position: relative; z-index: 1;
+            text-shadow: 0 2px 12px rgba(0,0,0,0.3);
+        }
+        .title-en {
+            font-family: 'Cinzel', serif;
+            color: var(--gold); font-size: 11px;
+            letter-spacing: 3.5px; font-weight: 600;
+            margin-bottom: 10px;
+            position: relative; z-index: 1;
+        }
+        .slogan {
+            color: rgba(255,255,255,0.65);
+            font-size: 11.5px; letter-spacing: 0.5px;
+            position: relative; z-index: 1;
+        }
+
+        /* ── 섹션 공통 ── */
+        .section {
+            padding: 26px 22px;
+            border-bottom: 1px solid rgba(0,51,102,0.07);
+        }
+        .section:last-of-type { border-bottom: none; }
+
+        .sec-title {
+            font-size: 11px; font-weight: 700;
+            color: var(--navy); letter-spacing: 2px;
+            text-transform: uppercase;
+            border-left: 3px solid var(--gold);
+            padding-left: 10px; margin-bottom: 18px;
+            font-family: 'Cinzel', serif;
+        }
+
+        /* ── 전문 분야 카드 ── */
+        .exp-card {
+            background: rgba(0, 51, 102, 0.03);
+            border: 1px solid rgba(0, 51, 102, 0.1);
+            border-radius: 14px; padding: 16px 18px;
+            margin-bottom: 10px;
+            transition: all 0.3s var(--ease);
+            position: relative; overflow: hidden;
+        }
+        .exp-card::before {
+            content: ''; position: absolute;
+            left: 0; top: 0; bottom: 0; width: 3px;
+            background: var(--navy);
+            border-radius: 0 2px 2px 0;
+            transition: width 0.3s var(--ease);
+        }
+        .exp-card.gold::before { background: var(--gold); }
+        .exp-card:hover {
+            transform: translateX(4px);
+            background: rgba(0, 51, 102, 0.06);
+            box-shadow: 0 4px 16px rgba(0,51,102,0.08);
+        }
+        .exp-card h4 {
+            font-size: 13.5px; font-weight: 700;
+            color: var(--navy); margin-bottom: 6px;
+        }
+        .exp-card.gold h4 { color: #9a7b20; }
+        .exp-card p {
+            font-size: 12px; color: #556; line-height: 1.7;
+        }
+
+        /* ── 온라인 마케팅 ── */
+        .mkt-desc {
+            font-size: 11.5px; color: #667; font-style: italic;
+            text-align: center; margin-bottom: 16px;
+            padding: 10px 14px;
+            background: var(--gold-pale);
+            border-radius: 8px;
+            border: 1px solid rgba(212,175,55,0.2);
+        }
+
+        .mkt-grid {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 10px; margin-bottom: 16px;
+        }
+        .mkt-item {
+            background: rgba(255,255,255,0.8);
+            border: 1px solid rgba(0,51,102,0.1);
+            border-radius: 12px; padding: 14px 12px;
+            text-align: center;
+            transition: all 0.3s var(--ease);
+        }
+        .mkt-item:hover {
+            border-color: var(--gold);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 18px rgba(212,175,55,0.15);
+        }
+        .mkt-item h5 { font-size: 12.5px; color: #334; margin-bottom: 4px; font-weight: 700; }
+        .mkt-item p { font-size: 10.5px; color: #889; line-height: 1.5; }
+
+        .badges {
+            display: flex; flex-wrap: wrap; gap: 6px; justify-content: center;
+        }
+        .badge {
+            padding: 5px 12px; border-radius: 20px;
+            font-size: 10.5px; font-weight: 700; color: #fff;
+            letter-spacing: 0.3px;
+            transition: transform 0.2s, opacity 0.2s;
+            cursor: default;
+        }
+        .badge:hover { transform: scale(1.08); opacity: 0.9; }
+
+        /* ── Professional Background ── */
+        .bg-list {
+            list-style: none;
+        }
+        .bg-item {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 0 14px;
+            align-items: baseline;
+            padding: 9px 0;
+            border-bottom: 1px solid rgba(0,51,102,0.06);
+            font-size: 12.5px;
+        }
+        .bg-item:last-child { border-bottom: none; padding-bottom: 0; }
+        .bg-company {
+            color: var(--navy); font-weight: 700;
+            white-space: nowrap;
+        }
+        .bg-role { color: #556; line-height: 1.5; }
+        .bg-icon {
+            grid-column: 1 / -1;
+            display: none;
+        }
+
+        /* ── 버튼 ── */
+        .btn-row {
+            display: flex; gap: 12px;
+            padding: 20px 22px 22px;
+        }
+        .btn {
+            flex: 1; padding: 15px 12px;
+            border-radius: 14px; border: none;
+            font-family: 'Noto Sans KR', sans-serif;
+            font-weight: 700; font-size: 13.5px;
+            cursor: pointer; display: flex;
+            align-items: center; justify-content: center; gap: 8px;
+            transition: all 0.3s var(--ease);
+            text-decoration: none; color: inherit;
+        }
+        .btn-primary {
+            background: var(--navy); color: #fff;
+            box-shadow: 0 4px 14px rgba(0,51,102,0.25);
+        }
+        .btn-primary:hover {
+            background: var(--navy-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 22px rgba(0,51,102,0.35);
+        }
+        .btn-outline {
+            background: transparent;
+            color: var(--navy);
+            border: 2px solid rgba(0,51,102,0.25);
+        }
+        .btn-outline:hover {
+            border-color: var(--navy);
+            background: rgba(0,51,102,0.05);
+            transform: translateY(-2px);
+        }
+
+        /* ── 푸터 ── */
+        .footer {
+            text-align: center;
+            padding: 24px 22px 28px;
+            background: rgba(0,51,102,0.02);
+            border-top: 1px solid rgba(0,51,102,0.07);
+        }
+        .footer-quote {
+            font-size: 12.5px; color: #445; font-weight: 500;
+            line-height: 1.7; margin-bottom: 10px;
+            position: relative; padding: 0 12px;
+        }
+        .footer-quote::before,
+        .footer-quote::after {
+            content: '"'; color: var(--gold);
+            font-family: Georgia, serif; font-size: 20px;
+            line-height: 0; vertical-align: -8px;
+        }
+        .footer-copy {
+            font-size: 10.5px; color: #aab; letter-spacing: 1px;
+        }
+
+        /* ── 반응형 ── */
+        @media (max-width: 480px) {
+            #main { padding: 16px 10px 50px; }
+            .card-wrap { border-radius: 28px; }
+            .header { padding: 40px 18px 34px; }
+            .profile-ring { width: 140px; height: 140px; }
+            .name { font-size: 26px; letter-spacing: 6px; }
+            .section { padding: 22px 18px; }
+            .btn-row { padding: 16px 18px 18px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 동적 배경 -->
+    <div id="bg">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <!-- 로딩 레이어 -->
+    <div id="loader">
+        <div class="particles" id="particles"></div>
+        <div class="loader-rings">
+            <div class="ring ring-1"></div>
+            <div class="ring ring-2"></div>
+            <div class="ring ring-3"></div>
+            <div class="ring-dot"></div>
+        </div>
+        <div class="loader-text">AI BUSINESS<br>ARCHITECT</div>
+        <div class="loader-sub">INITIALIZING...</div>
+    </div>
+
+    <!-- 메인 컨텐츠 -->
+    <div id="main">
+        <div class="card-wrap">
+
+            <!-- 헤더 -->
+            <div class="header">
+                <div class="profile-ring">
+                    <img src="PROFILE.JPG" alt="최재원 프로필">
+                </div>
+                <div class="name">최 재 원</div>
+                <div class="title-en">AI BUSINESS CONSULTANT</div>
+                <div class="slogan">Data-Driven Intelligence &amp; Strategy</div>
+            </div>
+
+            <!-- 핵심 전문 분야 -->
+            <div class="section">
+                <div class="sec-title">Main Expertise · AI Consulting</div>
+                <div class="exp-card">
+                    <h4>AI 워크플로우 최적화</h4>
+                    <p>30년 데이터 모델링 노하우를 결합한 기업 맞춤형 AI 도입 전략 및 업무 자동화 솔루션 제시</p>
+                </div>
+                <div class="exp-card gold">
+                    <h4>데이터 기반 의사결정 (BI)</h4>
+                    <p>QlikSense, SAP BW 등 엔터프라이즈 BI 도구를 활용한 인사이트 도출 및 경영 시각화 구현</p>
+                </div>
+            </div>
+
+            <!-- 온라인 마케팅 -->
+            <div class="section">
+                <div class="sec-title">Online Marketing &amp; Selling</div>
+                <div class="mkt-desc">국내 6대 마켓 입점 위탁판매 &amp; 데이터 퍼포먼스 마케팅 실현</div>
+                <div class="mkt-grid">
+                    <div class="mkt-item">
+                        <h5>SEO 최적화</h5>
+                        <p>데이터 기반<br>키워드 분석</p>
+                    </div>
+                    <div class="mkt-item">
+                        <h5>광고 데이터 분석</h5>
+                        <p>ROAS 중심<br>효율 극대화</p>
+                    </div>
+                </div>
+                <div class="badges">
+                    <span class="badge" style="background:#e74c3c;">쿠팡</span>
+                    <span class="badge" style="background:#2ecc71;">스마트스토어</span>
+                    <span class="badge" style="background:#e8a000; color:#fff;">11번가</span>
+                    <span class="badge" style="background:#3498db;">G마켓</span>
+                    <span class="badge" style="background:#e8523a;">옥션</span>
+                    <span class="badge" style="background:#c0392b;">롯데ON</span>
+                </div>
+            </div>
+
+            <!-- Professional Background -->
+            <div class="section">
+                <div class="sec-title">Professional Background</div>
+                <ul class="bg-list">
+                    <li class="bg-item">
+                        <span class="bg-company">현대 L&amp;C</span>
+                        <span class="bg-role">분석계 OLAP 시스템 구축</span>
+                    </li>
+                    <li class="bg-item">
+                        <span class="bg-company">현대제철</span>
+                        <span class="bg-role">BI 분석계 시스템 구축</span>
+                    </li>
+                    <li class="bg-item">
+                        <span class="bg-company">현대모비스</span>
+                        <span class="bg-role">전동화 실적 분석 KPI 시스템 구축</span>
+                    </li>
+                    <li class="bg-item">
+                        <span class="bg-company">삼성전자</span>
+                        <span class="bg-role">G-ERP 재무/원가 BI 시스템 고도화 컨설팅</span>
+                    </li>
+                    <li class="bg-item">
+                        <span class="bg-company">국도화학</span>
+                        <span class="bg-role">전산실장 역임 · ERP 및 IT 인프라 아키텍처 설계</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 버튼 -->
+            <div class="btn-row">
+                <a class="btn btn-primary" href="mailto:skydot.cjw@gmail.com">
+                    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                    </svg>
+                    E-Mail
+                </a>
+                <a class="btn btn-outline" href="tel:+82" id="contact-btn">
+                    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                    </svg>
+                    Contact
+                </a>
+            </div>
+
+            <!-- 푸터 -->
+            <div class="footer">
+                <p class="footer-quote">30년의 데이터 집요함이 AI 비즈니스의 정답을 찾습니다.</p>
+                <p class="footer-copy">© 2026 Choi Jae Won. All Rights Reserved.</p>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // 파티클 생성
+        const container = document.getElementById('particles');
+        for (let i = 0; i < 40; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            p.style.cssText = `
+                left: ${Math.random() * 100}%;
+                width: ${Math.random() > 0.7 ? 2 : 1}px;
+                height: ${Math.random() > 0.7 ? 2 : 1}px;
+                --dur: ${3 + Math.random() * 5}s;
+                --delay: ${Math.random() * 4}s;
+                --drift: ${(Math.random() - 0.5) * 80}px;
+                opacity: 0;
+            `;
+            container.appendChild(p);
+        }
+
+        // 로딩 완료 후 전환
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const loader = document.getElementById('loader');
+                loader.style.opacity = '0';
+                loader.style.pointerEvents = 'none';
+                document.body.classList.add('loaded');
+                setTimeout(() => { loader.style.display = 'none'; }, 950);
+            }, 2200);
+        });
+
+        // 마우스 반응 배경 블롭
+        let rafId;
+        document.addEventListener('mousemove', (e) => {
+            cancelAnimationFrame(rafId);
+            rafId = requestAnimationFrame(() => {
+                const nx = e.clientX / window.innerWidth;
+                const ny = e.clientY / window.innerHeight;
+                document.querySelector('.blob-1').style.transform =
+                    `translate(${nx * 50}px, ${ny * 40}px)`;
+                document.querySelector('.blob-2').style.transform =
+                    `translate(${nx * -45}px, ${ny * -35}px)`;
+                document.querySelector('.blob-3').style.transform =
+                    `translate(${(nx - 0.5) * 60}px, ${(ny - 0.5) * 50}px)`;
+            });
+        });
+    </script>
+</body>
+</html>
