@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LOADING | Chan-Gong-E</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            background: #05080A;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            font-family: 'Cinzel', serif;
+        }
+
+        .loader-container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 중앙 동그라미 로더 */
+        .circle-loader {
+            position: absolute;
+            width: 350px;
+            height: 350px;
+            border: 2px solid transparent;
+            border-top: 2px solid #D4AF37;
+            border-radius: 50%;
+            animation: spin 2s linear infinite;
+        }
+
+        .circle-loader::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            border: 1px solid transparent;
+            border-top: 1px solid #F4E0AF;
+            border-radius: 50%;
+            animation: spin 3s linear infinite;
+        }
+
+        .content {
+            text-align: center;
+            z-index: 10;
+        }
+
+        h1 {
+            color: #D4AF37;
+            font-size: 1.8rem;
+            letter-spacing: 5px;
+            margin: 0;
+            text-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+        }
+
+        .status {
+            color: #fff;
+            font-size: 0.8rem;
+            margin-top: 15px;
+            letter-spacing: 10px;
+            opacity: 0.5;
+            animation: blink 1.5s infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 0.3;
+            }
+
+            50% {
+                opacity: 0.8;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="loader-container">
+        <div class="circle-loader"></div>
+        <div class="content">
+            <h1>AI BUSINESS<br>ARCHITECT</h1>
+            <div class="status">INITIALIZING...</div>
+        </div>
+    </div>
+</body>
+
+</html>

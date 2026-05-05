@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SYSTEM INITIALIZING</title>
+    <style>
+        body {
+            margin: 0;
+            background: #080a0c; /* 깊이감 있는 다크 네이비 */
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Inter', -apple-system, sans-serif;
+            overflow: hidden;
+        }
+
+        .loader-box {
+            position: relative;
+            width: 120px; /* 작고 직관적인 사이즈 */
+            height: 120px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 메인 회전 링 */
+        .ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 2px solid rgba(212, 175, 55, 0.1);
+            border-top: 2px solid #D4AF37; /* 시그니처 골드 */
+            border-radius: 50%;
+            animation: rotate 0.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        }
+
+        /* 내부의 아주 작은 점 (정밀함 강조) */
+        .dot {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #D4AF37;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 10px #D4AF37;
+        }
+
+        .text-overlay {
+            position: absolute;
+            bottom: -40px;
+            width: 200px;
+            text-align: center;
+        }
+
+        .loading-text {
+            color: #D4AF37;
+            font-size: 11px;
+            letter-spacing: 5px;
+            font-weight: 400;
+            text-transform: uppercase;
+            opacity: 0.7;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="loader-box">
+        <div class="ring"></div>
+        <div class="dot"></div>
+        <div class="text-overlay">
+            <div class="loading-text">System Loading</div>
+        </div>
+    </div>
+</body>
+</html>

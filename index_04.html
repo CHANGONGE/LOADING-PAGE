@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Initializing...</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: #0a1628; /* 사령관님의 시그니처 네이비 블랙 */
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Pretendard', sans-serif;
+            overflow: hidden;
+        }
+
+        .loader-container {
+            position: relative;
+            width: 80px;  /* 작고 직관적인 크기 */
+            height: 80px;
+        }
+
+        /* 중앙의 정밀한 회전 원 */
+        .loader {
+            width: 100%;
+            height: 100%;
+            border: 3px solid rgba(201, 168, 76, 0.2); /* 연한 골드 가이드 라인 */
+            border-radius: 50%;
+            border-top-color: #C9A84C; /* 진한 골드 포인트 */
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            position: absolute;
+            top: 120%;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #C9A84C;
+            font-size: 12px;
+            letter-spacing: 3px;
+            white-space: nowrap;
+            font-weight: 300;
+        }
+    </style>
+</head>
+<body>
+    <div class="loader-container">
+        <div class="loader"></div>
+        <div class="loading-text">SYSTEM LOADING...</div>
+    </div>
+</body>
+</html>

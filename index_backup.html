@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>최재원 | AI Business Architect</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gold: #D4AF37;
+            --accent-gold: #F4E0AF;
+            --deep-bg: #05080A;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-main: #FFFFFF;
+            --text-muted: rgba(255, 255, 255, 0.6);
+            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+        body, html { 
+            margin: 0; padding: 0; width: 100%; min-height: 100vh; 
+            background-color: var(--deep-bg); 
+            font-family: 'Outfit', 'Noto Sans KR', sans-serif;
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        /* --- Animated Background --- */
+        .bg-gradient {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; overflow: hidden; background: radial-gradient(circle at 50% 50%, #0a1118 0%, #05080a 100%);
+        }
+        .bg-blob {
+            position: absolute; width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.05) 0%, transparent 70%);
+            filter: blur(80px); border-radius: 50%;
+            animation: move 20s infinite alternate;
+        }
+        .blob-1 { top: -10%; left: -10%; animation-duration: 25s; }
+        .blob-2 { bottom: -10%; right: -10%; animation-duration: 30s; background: radial-gradient(circle, rgba(0, 51, 102, 0.2) 0%, transparent 70%); }
+
+        @keyframes move {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(100px, 50px) scale(1.2); }
+        }
+
+        /* --- Loader Layer --- */
+        #loader-layer {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--deep-bg); z-index: 10000;
+            display: flex; justify-content: center; align-items: center;
+            transition: opacity 1.2s cubic-bezier(0.7, 0, 0.3, 1);
+        }
+        .loader-wrapper { position: relative; text-align: center; }
+        .circle-loader {
+            width: 120px; height: 120px; border: 2px solid var(--glass-border);
+            border-top-color: var(--primary-gold); border-radius: 50%;
+            animation: spin 1.5s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+            margin-bottom: 20px;
+        }
+        .loader-text {
+            font-weight: 600; letter-spacing: 0.3em; color: var(--primary-gold);
+            font-size: 0.9rem; text-transform: uppercase; animation: pulse 2s infinite;
+        }
+
+        /* --- Main Content --- */
+        #main-content {
+            opacity: 0; transform: translateY(30px);
+            transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+            padding: 40px 20px; display: flex; justify-content: center;
+        }
+        body.loaded #main-content { opacity: 1; transform: translateY(0); }
+
+        .container {
+            width: 100%; max-width: 480px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 40px; overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Header */
+        .header { 
+            padding: 60px 30px 40px; text-align: center; 
+            background: linear-gradient(180deg, rgba(212, 175, 55, 0.05) 0%, transparent 100%);
+        }
+        .profile-frame {
+            width: 140px; height: 140px; border-radius: 50%;
+            border: 2px solid var(--primary-gold); margin: 0 auto 25px;
+            padding: 6px; background: rgba(0,0,0,0.3);
+            position: relative;
+        }
+        .profile-frame::after {
+            content: ''; position: absolute; top: -5px; left: -5px; right: -5px; bottom: -5px;
+            border-radius: 50%; border: 1px solid rgba(212, 175, 55, 0.3);
+            animation: ripple 3s linear infinite;
+        }
+        .profile-frame img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+        
+        .name { font-size: 32px; font-weight: 700; margin-bottom: 8px; letter-spacing: 2px; }
+        .job-title { 
+            color: var(--primary-gold); font-weight: 600; font-size: 14px; 
+            letter-spacing: 3px; margin-bottom: 12px; text-transform: uppercase;
+        }
+        .tagline { font-size: 13px; color: var(--text-muted); font-weight: 300; }
+
+        /* Sections */
+        .section { padding: 30px 25px; border-top: 1px solid var(--glass-border); }
+        .section-title { 
+            font-size: 14px; font-weight: 600; color: var(--primary-gold); 
+            margin-bottom: 20px; letter-spacing: 1px; display: flex; align-items: center; gap: 10px;
+        }
+        .section-title::after { content: ''; flex: 1; height: 1px; background: var(--glass-border); }
+
+        /* Cards */
+        .card { 
+            background: rgba(255, 255, 255, 0.02); border: 1px solid var(--glass-border);
+            border-radius: 16px; padding: 20px; margin-bottom: 15px;
+            transition: var(--transition); cursor: default;
+        }
+        .card:hover { 
+            background: rgba(255, 255, 255, 0.05); transform: translateY(-5px);
+            border-color: rgba(212, 175, 55, 0.3);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .card h4 { margin: 0 0 8px 0; color: var(--text-main); font-size: 16px; font-weight: 600; }
+        .card p { margin: 0; font-size: 13px; color: var(--text-muted); line-height: 1.6; font-weight: 300; }
+
+        /* Marketing Grid */
+        .marketing-quote { 
+            font-size: 13px; color: var(--accent-gold); font-style: italic; 
+            margin-bottom: 20px; text-align: center; line-height: 1.5;
+        }
+        .sub-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        .sub-card { 
+            background: rgba(255, 255, 255, 0.01); border: 1px solid var(--glass-border);
+            border-radius: 12px; padding: 15px; text-align: center;
+        }
+        .sub-card h5 { margin: 0 0 5px 0; font-size: 13px; color: var(--text-main); }
+        .sub-card p { margin: 0; font-size: 11px; color: var(--text-muted); }
+
+        /* Badges */
+        .badge-container { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+        .badge { 
+            padding: 6px 12px; border-radius: 20px; font-size: 11px; 
+            background: rgba(255, 255, 255, 0.05); border: 1px solid var(--glass-border);
+            color: var(--text-muted); font-weight: 500; transition: var(--transition);
+        }
+        .badge:hover { color: var(--text-main); border-color: var(--primary-gold); background: rgba(212, 175, 55, 0.1); }
+
+        /* Experience List */
+        .exp-list { list-style: none; padding: 0; margin: 0; }
+        .exp-item { 
+            font-size: 13px; line-height: 1.8; color: var(--text-muted); margin-bottom: 10px;
+            display: flex; gap: 10px; align-items: flex-start;
+        }
+        .exp-item::before { content: '•'; color: var(--primary-gold); font-weight: bold; }
+
+        /* Buttons */
+        .btn-container { display: flex; gap: 15px; padding: 30px 25px 40px; }
+        .btn { 
+            flex: 1; padding: 16px; border-radius: 16px; border: 1px solid var(--glass-border);
+            font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 10px; 
+            font-size: 14px; cursor: pointer; transition: var(--transition);
+            background: rgba(255, 255, 255, 0.05); color: var(--text-main); 
+            text-decoration: none;
+        }
+        .btn-primary { background: var(--primary-gold); color: var(--deep-bg); border: none; }
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+        .btn-primary:hover { background: var(--accent-gold); }
+
+        /* Animations */
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+        @keyframes ripple {
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(1.2); opacity: 0; }
+        }
+
+        /* Mobile Optimization */
+        @media (max-width: 480px) {
+            .container { border-radius: 0; border: none; }
+            body { background-color: var(--deep-bg); }
+            #main-content { padding: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-gradient">
+        <div class="bg-blob blob-1"></div>
+        <div class="bg-blob blob-2"></div>
+    </div>
+
+    <div id="loader-layer">
+        <div class="loader-wrapper">
+            <div class="circle-loader"></div>
+            <div class="loader-text">AI Architect Loading</div>
+        </div>
+    </div>
+
+    <div id="main-content">
+        <div class="container">
+            <header class="header">
+                <div class="profile-frame">
+                    <img src="PROFILE.JPG" alt="최재원">
+                </div>
+                <h1 class="name">최재원</h1>
+                <p class="job-title">AI Business Consultant</p>
+                <p class="tagline">Data-Driven Intelligence & Strategy</p>
+            </header>
+
+            <section class="section">
+                <h3 class="section-title">Core Expertise</h3>
+                <div class="card">
+                    <h4>AI 워크플로우 최적화</h4>
+                    <p>30년 데이터 모델링 노하우를 결합한 기업 맞춤형 AI 도입 전략 및 업무 자동화 솔루션 제시</p>
+                </div>
+                <div class="card">
+                    <h4>데이터 기반 의사결정 (BI)</h4>
+                    <p>QlikSense, SAP BW 등 엔터프라이즈 BI 도구를 활용한 인사이트 도출 및 시각화 구현</p>
+                </div>
+            </section>
+
+            <section class="section">
+                <h3 class="section-title">Digital Commerce</h3>
+                <p class="marketing-quote">"국내 6대 마켓 입점 위탁판매 & 데이터 퍼포먼스 마케팅 실현"</p>
+                <div class="sub-grid">
+                    <div class="sub-card">
+                        <h5>SEO 최적화</h5>
+                        <p>키워드 데이터 분석</p>
+                    </div>
+                    <div class="sub-card">
+                        <h5>광고 효율 분석</h5>
+                        <p>ROAS 중심 극대화</p>
+                    </div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge">쿠팡</span>
+                    <span class="badge">스마트스토어</span>
+                    <span class="badge">11번가</span>
+                    <span class="badge">G마켓</span>
+                    <span class="badge">옥션</span>
+                    <span class="badge">롯데ON</span>
+                </div>
+            </section>
+
+            <section class="section">
+                <h3 class="section-title">Experience</h3>
+                <ul class="exp-list">
+                    <li class="exp-item">현대모비스: 전동화 실적 분석 KPI 시스템 구축</li>
+                    <li class="exp-item">삼성전자: G-ERP 재무/원가 BI 시스템 고도화</li>
+                    <li class="exp-item">국도화학: 전산실장 역임 (ERP 및 IT 아키텍처)</li>
+                    <li class="exp-item">특기: 데이터 마이그레이션 및 DW/Mart 최적화</li>
+                </ul>
+            </section>
+
+            <div class="btn-container">
+                <a href="mailto:your-email@example.com" class="btn">📩 Email</a>
+                <a href="tel:010-0000-0000" class="btn btn-primary">📞 Contact</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('loader-layer');
+            
+            setTimeout(() => {
+                loader.style.opacity = '0';
+                document.body.classList.add('loaded');
+                
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                }, 1200);
+            }, 2000); // 2초 로딩 후 전환
+        });
+
+        // Simple parallax effect for blobs
+        document.addEventListener('mousemove', (e) => {
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            
+            document.querySelector('.blob-1').style.transform = `translate(${x * 50}px, ${y * 50}px)`;
+            document.querySelector('.blob-2').style.transform = `translate(${x * -50}px, ${y * -50}px)`;
+        });
+    </script>
+</body>
+</html>

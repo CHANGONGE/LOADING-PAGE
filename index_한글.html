@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>창공 | 비즈니스 아키텍트</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: #00050a; /* 깊은 심해의 검은색 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: white;
+            font-family: 'Pretendard', sans-serif;
+        }
+
+        /* 사령관님이 기억하시는 그 푸른 원 */
+        .origin-circle {
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            border: 4px solid #00aaff; /* 창공의 푸른색 선 */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle, rgba(0, 170, 255, 0.1) 0%, transparent 75%);
+            box-shadow: 0 0 50px rgba(0, 170, 255, 0.3);
+            position: relative;
+        }
+
+        .main-brand {
+            font-size: 3rem;
+            font-weight: 900;
+            color: #00aaff;
+            letter-spacing: 15px;
+            margin-right: -15px; /* 자간 정렬 */
+            text-shadow: 0 0 20px rgba(0, 170, 255, 0.6);
+        }
+
+        .sub-name {
+            margin-top: 15px;
+            font-size: 1.2rem;
+            letter-spacing: 5px;
+            font-weight: 300;
+            opacity: 0.8;
+        }
+
+        /* 장식용 회전 선 (직관적 포인트) */
+        .origin-circle::after {
+            content: '';
+            position: absolute;
+            top: -10px; left: -10px; right: -10px; bottom: -10px;
+            border: 1px solid rgba(0, 170, 255, 0.2);
+            border-radius: 50%;
+            border-top: 1px solid #00aaff;
+            animation: rotate 3s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="origin-circle">
+        <div class="main-brand">창 공</div>
+        <div class="sub-name">최 재 원</div>
+    </div>
+</body>
+</html>

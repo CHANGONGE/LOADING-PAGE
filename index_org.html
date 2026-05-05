@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>최재원 | AI Business Consultant</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* [1] 레이어 스택 설정: 본문은 깔아두고 로더만 위에 덮음 */
+        * { box-sizing: border-box; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background-color: #f4f6f9; font-family: 'Noto Sans KR', sans-serif; overflow: hidden; }
+
+        /* [2] 메인 컨텐츠 (이미 로딩되어 로더 밑에 대기 중) */
+        #main-content {
+            width: 100%; height: 100%; overflow-y: auto;
+            display: flex; justify-content: center; align-items: flex-start;
+            padding: 20px 10px;
+        }
+
+        /* [3] 골드 로더: 중앙 정렬 및 최상위 고정 */
+        #loader-layer {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #05080A; z-index: 9999;
+            display: flex; justify-content: center; align-items: center;
+            transition: opacity 1s ease-out; pointer-events: none;
+        }
+        .loader-wrapper {
+            position: relative; width: 300px; height: 300px;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .circle-loader {
+            position: absolute; width: 100%; height: 100%;
+            border: 2px solid transparent; border-top: 2px solid #D4AF37;
+            border-radius: 50%; animation: spin 2s linear infinite; top: 0; left: 0;
+        }
+        .circle-loader::before {
+            content: ''; position: absolute; top: 12px; left: 12px; right: 12px; bottom: 12px;
+            border: 1px solid transparent; border-top: 1px solid #F4E0AF;
+            border-radius: 50%; animation: spin 3.5s linear infinite;
+        }
+        .loader-content { text-align: center; font-family: 'Cinzel', serif; z-index: 10; }
+        .loader-content h1 { color: #D4AF37; font-size: 1.4rem; letter-spacing: 4px; margin: 0; }
+
+        /* [4] 프로필 카드 (업로드해주신 이미지 내용 100% 반영) */
+        .container { width: 100%; max-width: 420px; background: white; border-radius: 40px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.1); margin-bottom: 50px; }
+        .header { background-color: #003366; padding: 50px 20px 40px; text-align: center; color: white; }
+        .profile-frame { width: 160px; height: 160px; border-radius: 50%; border: 4px solid #d4af37; margin: 0 auto 25px; overflow: hidden; background: #222; }
+        .profile-frame img { width: 100%; height: 100%; object-fit: cover; }
+        .name { font-size: 28px; font-weight: 700; margin-bottom: 8px; letter-spacing: 6px; }
+        .job-title { color: #d4af37; font-weight: 700; font-size: 16px; margin-bottom: 6px; }
+        .slogan { font-size: 12px; opacity: 0.8; font-weight: 300; }
+
+        .section { padding: 25px 20px; border-bottom: 1px solid #f0f0f0; text-align: left; }
+        .section-title { font-size: 15px; font-weight: 700; color: #003366; margin-bottom: 18px; border-left: 4px solid #007bff; padding-left: 10px; }
+
+        /* 이미지에 있던 전문 분야 상세 내용 */
+        .card { background: #f8faff; border-radius: 12px; padding: 15px; margin-bottom: 12px; border-left: 4px solid #007bff; }
+        .card.gold { border-left-color: #d4af37; }
+        .card h4 { margin: 0 0 6px 0; color: #007bff; font-size: 15px; }
+        .card.gold h4 { color: #d4af37; }
+        .card p { margin: 0; font-size: 12.5px; color: #555; line-height: 1.6; }
+
+        /* 온라인 마케팅 섹션 (이미지 완벽 복구) */
+        .marketing-desc { font-size: 11.5px; color: #666; font-style: italic; margin-bottom: 15px; text-align: center; }
+        .sub-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+        .sub-card { background: #fdfdfd; border: 1px solid #eee; border-radius: 10px; padding: 12px; text-align: center; }
+        .sub-card h5 { margin: 0 0 4px 0; font-size: 13px; color: #333; }
+        .sub-card p { margin: 0; font-size: 10.5px; color: #888; }
+
+        .badge-container { display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; }
+        .badge { padding: 4px 10px; border-radius: 15px; font-size: 10px; color: white; font-weight: bold; }
+
+        /* [5] 버튼 영역: 푸른색 통일 (#003366) */
+        .btn-container { display: flex; gap: 12px; padding: 25px 20px; }
+        .btn { 
+            flex: 1; padding: 14px; border-radius: 12px; border: none; font-weight: 700; 
+            display: flex; align-items: center; justify-content: center; gap: 8px; 
+            font-size: 14px; cursor: pointer; transition: 0.3s;
+            background-color: #003366; color: white; 
+        }
+        .btn:hover { opacity: 0.9; transform: translateY(-2px); }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <div id="loader-layer">
+        <div class="loader-wrapper">
+            <div class="circle-loader"></div>
+            <div class="loader-content"><h1>AI BUSINESS<br>ARCHITECT</h1></div>
+        </div>
+    </div>
+
+    <div id="main-content">
+        <div class="container">
+            <div class="header">
+                <div class="profile-frame"><img src="PROFILE.JPG" alt="최재원"></div>
+                <div class="name">최 재 원</div>
+                <div class="job-title">AI BUSINESS CONSULTANT</div>
+                <div class="slogan">Data-Driven Intelligence & Strategy</div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Main Expertise: AI Consulting</div>
+                <div class="card">
+                    <h4>AI 워크플로우 최적화</h4>
+                    <p>30년 데이터 모델링 노하우를 결합한 기업 맞춤형 AI 도입 전략 및 업무 자동화 솔루션 제시</p>
+                </div>
+                <div class="card gold">
+                    <h4>데이터 기반 의사결정 (BI)</h4>
+                    <p>QlikSense, SAP BW 등 엔터프라이즈 BI 도구를 활용한 인사이트 도출 및 시각화 구현</p>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Online Marketing & Selling</div>
+                <div class="marketing-desc">"국내 6대 마켓 입점 위탁판매 & 데이터 퍼포먼스 마케팅 실현"</div>
+                <div class="sub-grid">
+                    <div class="sub-card"><h5>SEO 최적화</h5><p>데이터 기반 키워드 분석</p></div>
+                    <div class="sub-card"><h5>광고 데이터 분석</h5><p>ROAS 중심 효율 극대화</p></div>
+                </div>
+                <div class="badge-container">
+                    <span class="badge" style="background:#e74c3c">쿠팡</span>
+                    <span class="badge" style="background:#2ecc71">스마트스토어</span>
+                    <span class="badge" style="background:#f1c40f">11번가</span>
+                    <span class="badge" style="background:#3498db">G마켓</span>
+                    <span class="badge" style="background:#34495e">옥션</span>
+                    <span class="badge" style="background:#e67e22">롯데ON</span>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Professional Background</div>
+                <div style="font-size: 12.5px; line-height: 2.2; color: #444;">
+                    ✓ 현대모비스: 전동화 실적 분석 KPI 시스템 구축<br>
+                    ✓ 삼성전자: G-ERP 재무/원가 BI 시스템 고도화 컨설팅<br>
+                    ✓ 국도화학: 전산실장 역임 (ERP 및 IT 인프라 아키텍처 설계)<br>
+                    ✓ 특기: 데이터 마이그레이션 및 DW/Mart 설계 최적화
+                </div>
+            </div>
+
+            <div class="btn-container">
+                <button class="btn">📩 이메일 보내기</button>
+                <button class="btn">📞 전화 걸기</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 무조건 작동하는 강제 타이머 방식
+        setTimeout(function() {
+            const loader = document.getElementById('loader-layer');
+            loader.style.opacity = '0'; // 커튼을 걷음
+            
+            setTimeout(function() {
+                loader.style.display = 'none'; // 완전히 제거
+            }, 1000);
+        }, 3000);
+    </script>
+</body>
+</html>
