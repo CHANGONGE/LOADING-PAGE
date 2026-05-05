@@ -6,12 +6,12 @@
     <title>최재원 | AI Business Consultant</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* [1] 프리미엄 다크 글래스 테마 (index_backup.html 사양) */
+        /* [1] 프리미엄 다크 글래스 테마 */
         :root {
-            --primary-navy: #05080A; /* 딥 다크 배경 */
+            --primary-navy: #05080A;
             --accent-gold: #D4AF37;
             --text-main: #FFFFFF;
-            --text-muted: rgba(255, 255, 255, 0.6); /* 원래의 부드러운 톤으로 원복 */
+            --text-muted: rgba(255, 255, 255, 0.7);
             --glass-bg: rgba(255, 255, 255, 0.03);
             --glass-border: rgba(255, 255, 255, 0.1);
             --transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
@@ -26,7 +26,7 @@
             overflow: hidden; 
         }
 
-        /* [2] 동적 배경 (다크 테마 최적화) */
+        /* [2] 동적 배경 */
         #bg {
             position: fixed; inset: 0; z-index: 0; overflow: hidden;
             background: radial-gradient(circle at 50% 50%, #0a1118 0%, #05080a 100%);
@@ -35,199 +35,83 @@
             position: absolute; border-radius: 50%;
             filter: blur(80px); pointer-events: none; transition: transform 0.1s linear;
         }
-        .blob-1 {
-            width: 700px; height: 700px; top: -20%; left: -15%;
-            background: radial-gradient(circle, rgba(212, 175, 55, 0.05) 0%, transparent 70%);
-            animation: drift1 28s ease-in-out infinite alternate;
-        }
-        .blob-2 {
-            width: 600px; height: 600px; bottom: -15%; right: -10%;
-            background: radial-gradient(circle, rgba(0, 51, 102, 0.2) 0%, transparent 70%);
-            animation: drift2 35s ease-in-out infinite alternate;
-        }
-        .blob-3 {
-            width: 400px; height: 400px; top: 40%; left: 50%;
-            background: radial-gradient(circle, rgba(212, 175, 55, 0.03) 0%, transparent 70%);
-            animation: drift3 22s ease-in-out infinite alternate;
-        }
+        .blob-1 { width: 700px; height: 700px; top: -20%; left: -15%; background: radial-gradient(circle, rgba(212, 175, 55, 0.05) 0%, transparent 70%); animation: drift1 28s ease-in-out infinite alternate; }
+        .blob-2 { width: 600px; height: 600px; bottom: -15%; right: -10%; background: radial-gradient(circle, rgba(0, 51, 102, 0.2) 0%, transparent 70%); animation: drift2 35s ease-in-out infinite alternate; }
+        .blob-3 { width: 400px; height: 400px; top: 40%; left: 50%; background: radial-gradient(circle, rgba(212, 175, 55, 0.03) 0%, transparent 70%); animation: drift3 22s ease-in-out infinite alternate; }
         @keyframes drift1 { to { transform: translate(80px, 60px) scale(1.15); } }
         @keyframes drift2 { to { transform: translate(-70px, -50px) scale(1.1); } }
         @keyframes drift3 { to { transform: translate(40px, -80px) scale(0.9); } }
 
-        /* [3] 로딩 레이어 고도화 (다크 테마 유지) */
+        /* [3] 로딩 레이어 */
         #loader {
-            position: fixed; inset: 0; z-index: 9999;
-            background: #03090F;
-            display: flex; flex-direction: column;
-            justify-content: center; align-items: center; gap: 28px;
+            position: fixed; inset: 0; z-index: 9999; background: #03090F;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 28px;
             transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1);
         }
-
-        .loader-rings {
-            position: relative; width: 180px; height: 180px;
-            display: flex; justify-content: center; align-items: center;
-        }
-        .ring {
-            position: absolute; border-radius: 50%;
-            border: 2px solid transparent;
-        }
-        .ring-1 {
-            width: 180px; height: 180px;
-            border-top-color: var(--accent-gold);
-            animation: spin 1.6s linear infinite;
-        }
-        .ring-2 {
-            width: 140px; height: 140px;
-            border-top-color: rgba(212, 175, 55, 0.5);
-            border-right-color: rgba(212, 175, 55, 0.2);
-            animation: spin 2.4s linear infinite reverse;
-        }
-        .ring-3 {
-            width: 100px; height: 100px;
-            border-top-color: rgba(212, 175, 55, 0.25);
-            animation: spin 3.2s linear infinite;
-        }
-        .ring-dot {
-            width: 6px; height: 6px; border-radius: 50%;
-            background: var(--accent-gold);
-            box-shadow: 0 0 12px var(--accent-gold), 0 0 24px rgba(212,175,55,0.4);
-        }
-
-        .loader-text {
-            font-family: 'Cinzel', serif;
-            color: var(--accent-gold);
-            font-size: 1.1rem;
-            letter-spacing: 6px;
-            text-align: center;
-            line-height: 1.7;
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        .loader-sub {
-            color: rgba(255,255,255,0.3);
-            font-size: 0.65rem;
-            letter-spacing: 8px;
-            font-family: 'Cinzel', serif;
-            animation: pulse 2s ease-in-out infinite 0.5s;
-        }
-
+        .loader-rings { position: relative; width: 180px; height: 180px; display: flex; justify-content: center; align-items: center; }
+        .ring { position: absolute; border-radius: 50%; border: 2px solid transparent; }
+        .ring-1 { width: 180px; height: 180px; border-top-color: var(--accent-gold); animation: spin 1.6s linear infinite; }
+        .ring-2 { width: 140px; height: 140px; border-top-color: rgba(212, 175, 55, 0.5); border-right-color: rgba(212, 175, 55, 0.2); animation: spin 2.4s linear infinite reverse; }
+        .ring-3 { width: 100px; height: 100px; border-top-color: rgba(212, 175, 55, 0.25); animation: spin 3.2s linear infinite; }
+        .ring-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent-gold); box-shadow: 0 0 12px var(--accent-gold), 0 0 24px rgba(212,175,55,0.4); }
+        .loader-text { font-family: 'Cinzel', serif; color: var(--accent-gold); font-size: 1.1rem; letter-spacing: 6px; text-align: center; line-height: 1.7; animation: pulse 2s ease-in-out infinite; }
+        .loader-sub { color: rgba(255,255,255,0.3); font-size: 0.65rem; letter-spacing: 8px; font-family: 'Cinzel', serif; animation: pulse 2s ease-in-out infinite 0.5s; }
         .particles { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
-        .particle {
-            position: absolute; width: 1px; height: 1px; background: var(--accent-gold); border-radius: 50%;
-            opacity: 0; animation: float-up var(--dur, 4s) linear var(--delay, 0s) infinite;
-        }
-        @keyframes float-up {
-            0%   { opacity: 0; transform: translateY(100vh) translateX(0); }
-            10%  { opacity: 0.6; }
-            90%  { opacity: 0.4; }
-            100% { opacity: 0; transform: translateY(-10vh) translateX(var(--drift, 20px)); }
-        }
+        .particle { position: absolute; width: 1px; height: 1px; background: var(--accent-gold); border-radius: 50%; opacity: 0; animation: float-up var(--dur, 4s) linear var(--delay, 0s) infinite; }
+        @keyframes float-up { 0% { opacity: 0; transform: translateY(100vh) translateX(0); } 10% { opacity: 0.6; } 90% { opacity: 0.4; } 100% { opacity: 0; transform: translateY(-10vh) translateX(var(--drift, 20px)); } }
 
-        /* [4] 메인 컨텐츠 등장 애니메이션 */
+        /* [4] 메인 컨텐츠 */
         #main-content {
             width: 100%; height: 100%; overflow-y: auto;
             display: flex; justify-content: center; align-items: flex-start;
-            padding: 20px 10px;
-            opacity: 0; transform: translateY(20px);
+            padding: 20px 10px; opacity: 0; transform: translateY(20px);
             transition: var(--transition);
         }
         body.loaded #main-content { opacity: 1; transform: translateY(0); }
 
-        /* [5] 글래스모피즘 카드 디자인 */
         .container { 
             width: 100%; max-width: 440px; 
-            background: var(--glass-bg);
-            backdrop-filter: blur(25px) saturate(1.8);
-            -webkit-backdrop-filter: blur(25px) saturate(1.8);
-            border-radius: 40px; 
-            border: 1px solid var(--glass-border);
+            background: var(--glass-bg); backdrop-filter: blur(25px) saturate(1.8); -webkit-backdrop-filter: blur(25px) saturate(1.8);
+            border-radius: 40px; border: 1px solid var(--glass-border);
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            margin-top: 20px; margin-bottom: 50px; 
-            transition: var(--transition);
+            margin-top: 20px; margin-bottom: 50px; overflow: hidden;
         }
         
-        .header { 
-            background: linear-gradient(180deg, rgba(212, 175, 55, 0.05) 0%, transparent 100%);
-            padding: 50px 20px 40px; text-align: center; 
-        }
-        .profile-frame { 
-            width: 160px; height: 160px; border-radius: 50%; 
-            border: 2px solid var(--accent-gold); 
-            padding: 5px; background: rgba(0,0,0,0.3);
-            margin: 0 auto 25px; overflow: hidden; 
-            transition: transform 0.5s ease;
-        }
-        .profile-frame:hover { transform: scale(1.05); }
+        .header { background: linear-gradient(180deg, rgba(212, 175, 55, 0.05) 0%, transparent 100%); padding: 50px 20px 40px; text-align: center; }
+        .profile-frame { width: 160px; height: 160px; border-radius: 50%; border: 2px solid var(--accent-gold); padding: 5px; background: rgba(0,0,0,0.3); margin: 0 auto 25px; overflow: hidden; transition: transform 0.5s ease; }
         .profile-frame img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
         .name { font-size: 28px; font-weight: 700; margin-bottom: 8px; letter-spacing: 6px; color: #fff; }
         .job-title { color: var(--accent-gold); font-weight: 700; font-size: 16px; margin-bottom: 6px; letter-spacing: 2px; }
         
         .section { padding: 25px 25px; border-bottom: 1px solid var(--glass-border); text-align: left; }
-        .section-title { 
-            font-size: 14px; font-weight: 700; color: var(--accent-gold); 
-            margin-bottom: 18px; border-left: 4px solid var(--accent-gold); padding-left: 10px; 
-            text-transform: uppercase; letter-spacing: 1px;
-        }
+        .section-title { font-size: 14px; font-weight: 700; color: var(--accent-gold); margin-bottom: 18px; border-left: 4px solid var(--accent-gold); padding-left: 10px; text-transform: uppercase; letter-spacing: 1px; }
         
-        .card { 
-            background: rgba(255, 255, 255, 0.02); border: 1px solid var(--glass-border);
-            border-radius: 16px; padding: 18px; margin-bottom: 12px; 
-            transition: var(--transition);
-        }
-        .card:hover { 
-            background: rgba(255, 255, 255, 0.05); 
-            transform: translateX(5px); 
-            border-color: rgba(212, 175, 55, 0.3);
-        }
+        .card { background: rgba(255, 255, 255, 0.02); border: 1px solid var(--glass-border); border-radius: 16px; padding: 18px; margin-bottom: 12px; transition: var(--transition); }
+        .card:hover { background: rgba(255, 255, 255, 0.05); transform: translateX(5px); border-color: rgba(212, 175, 55, 0.3); }
         .card.gold { border-left: 4px solid var(--accent-gold); }
         .card h4 { margin: 0 0 6px 0; color: #fff; font-size: 15px; }
         .card p { margin: 0; font-size: 12.5px; color: var(--text-muted); line-height: 1.7; }
 
-        /* 온라인 마케팅 디테일 */
         .marketing-desc { font-size: 11.5px; color: var(--accent-gold); font-style: italic; margin-bottom: 15px; text-align: center; opacity: 0.8; }
         .sub-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-        .sub-card { 
-            background: rgba(255, 255, 255, 0.01); border: 1px solid var(--glass-border);
-            border-radius: 12px; padding: 12px; text-align: center; transition: var(--transition); 
-        }
-        .sub-card:hover { border-color: var(--accent-gold); transform: translateY(-3px); }
+        .sub-card { background: rgba(255, 255, 255, 0.01); border: 1px solid var(--glass-border); border-radius: 12px; padding: 12px; text-align: center; transition: var(--transition); }
         .sub-card h5 { margin: 0 0 4px 0; font-size: 13px; color: #fff; }
         .sub-card p { margin: 0; font-size: 10.5px; color: var(--text-muted); }
 
         .badge-container { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
-        .badge { 
-            padding: 5px 12px; border-radius: 15px; font-size: 10.5px; 
-            background: rgba(255, 255, 255, 0.05); border: 1px solid var(--glass-border);
-            color: var(--text-muted); font-weight: 500; transition: var(--transition); 
-        }
-        .badge:hover { color: #fff; border-color: var(--accent-gold); background: rgba(212, 175, 55, 0.1); }
+        .badge { padding: 5px 12px; border-radius: 15px; font-size: 10.5px; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--glass-border); color: var(--text-muted); font-weight: 500; }
 
-        /* Professional Background (가독성을 위해 여기만 특별히 선명하게 설정) */
-        .exp-list { list-style: none; padding: 0 0 0 10px; margin: 0; }
-        .exp-item { 
-            font-size: 13.5px; line-height: 2; color: rgba(255, 255, 255, 0.95); /* 선명한 텍스트 */
-            margin-bottom: 8px;
-            display: flex; gap: 10px; align-items: flex-start;
-        }
-        .exp-item::before { content: '✓'; color: var(--accent-gold); font-weight: bold; }
+        /* Professional Background 특별 선명 처리 */
+        .pro-list { font-size: 13.5px; line-height: 2.2; color: #FFFFFF; padding-left: 14px; font-weight: 500; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
 
-        /* 버튼 영역 */
         .btn-container { display: flex; gap: 12px; padding: 25px 25px 35px; }
-        .btn { 
-            flex: 1; padding: 15px; border-radius: 16px; border: 1px solid var(--glass-border);
-            font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 10px; 
-            font-size: 14px; cursor: pointer; transition: var(--transition);
-            background: rgba(255, 255, 255, 0.05); color: #fff; 
-            text-decoration: none;
-        }
+        .btn { flex: 1; padding: 15px; border-radius: 16px; border: 1px solid var(--glass-border); font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 14px; cursor: pointer; transition: var(--transition); background: rgba(255, 255, 255, 0.05); color: #fff; text-decoration: none; }
         .btn-primary { background: var(--accent-gold); color: #05080A; border: none; }
         .btn:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
-        .btn-primary:hover { opacity: 0.9; }
 
-        /* 푸터 스타일 */
         .footer { padding: 30px 25px; text-align: center; border-top: 1px solid var(--glass-border); background: rgba(255,255,255,0.01); }
         .footer-main { margin: 0 0 10px 0; font-size: 13px; color: var(--text-muted); font-weight: 500; line-height: 1.6; }
-        .footer-copy { margin: 0; font-size: 11px; color: rgba(255,255,255,0.2); letter-spacing: 1px; }
+        .footer-copy { margin: 0; font-size: 11px; color: rgba(255,255,255,0.2); }
 
         @keyframes spin { 100% { transform: rotate(360deg); } }
         @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
@@ -235,14 +119,12 @@
 </head>
 <body>
 
-    <!-- 동적 배경 -->
     <div id="bg">
         <div class="blob blob-1"></div>
         <div class="blob blob-2"></div>
         <div class="blob blob-3"></div>
     </div>
 
-    <!-- 로딩 레이어 -->
     <div id="loader">
         <div class="particles" id="particles"></div>
         <div class="loader-rings">
@@ -284,18 +166,18 @@
                     <div class="sub-card"><h5>광고 데이터 분석</h5><p>ROAS 중심 효율 극대화</p></div>
                 </div>
                 <div class="badge-container">
-                    <span class="badge" style="background:#e74c3c">쿠팡</span>
-                    <span class="badge" style="background:#2ecc71">스마트스토어</span>
-                    <span class="badge" style="background:#f1c40f">11번가</span>
-                    <span class="badge" style="background:#3498db">G마켓</span>
-                    <span class="badge" style="background:#34495e">옥션</span>
-                    <span class="badge" style="background:#e67e22">롯데ON</span>
+                    <span class="badge" style="border-color:#e74c3c; color:#e74c3c">쿠팡</span>
+                    <span class="badge" style="border-color:#2ecc71; color:#2ecc71">스마트스토어</span>
+                    <span class="badge" style="border-color:#f1c40f; color:#f1c40f">11번가</span>
+                    <span class="badge" style="border-color:#3498db; color:#3498db">G마켓</span>
+                    <span class="badge" style="border-color:#34495e; color:#34495e">옥션</span>
+                    <span class="badge" style="border-color:#e67e22; color:#e67e22">롯데ON</span>
                 </div>
             </div>
 
             <div class="section">
                 <div class="section-title">Professional Background</div>
-                <div style="font-size: 13.5px; line-height: 2.2; color: #FFFFFF; padding-left: 14px; font-weight: 500; text-shadow: 0 1px 2px rgba(0,0,0,0.5);">
+                <div class="pro-list">
                     ✓ 현대 L&C : 분석계 OLAP시스템 구축<br>
                     ✓ 현대제철 : BI 분석계 시스템 구축<br>
                     ✓ 현대모비스: 전동화 실적 분석 KPI 시스템 구축<br>
@@ -318,50 +200,27 @@
     </div>
 
     <script>
-        // 파티클 생성
         const container = document.getElementById('particles');
         for (let i = 0; i < 40; i++) {
             const p = document.createElement('div');
             p.className = 'particle';
-            p.style.cssText = `
-                left: ${Math.random() * 100}%;
-                width: ${Math.random() > 0.7 ? 2 : 1}px;
-                height: ${Math.random() > 0.7 ? 2 : 1}px;
-                --dur: ${3 + Math.random() * 5}s;
-                --delay: ${Math.random() * 4}s;
-                --drift: ${(Math.random() - 0.5) * 80}px;
-                opacity: 0;
-            `;
+            p.style.cssText = `left: ${Math.random() * 100}%; width: 1px; height: 1px; --dur: ${3 + Math.random() * 5}s; --delay: ${Math.random() * 4}s; --drift: ${(Math.random() - 0.5) * 80}px; opacity: 0;`;
             container.appendChild(p);
         }
-
-        // 로딩 완료 후 전환
         window.addEventListener('load', () => {
             setTimeout(() => {
                 const loader = document.getElementById('loader');
                 loader.style.opacity = '0';
-                loader.style.pointerEvents = 'none';
                 document.body.classList.add('loaded');
                 setTimeout(() => { loader.style.display = 'none'; }, 950);
-            }, 2200);
+            }, 2000);
         });
-
-        // 마우스 반응 배경 블롭
-        let rafId;
         document.addEventListener('mousemove', (e) => {
-            cancelAnimationFrame(rafId);
-            rafId = requestAnimationFrame(() => {
-                const nx = e.clientX / window.innerWidth;
-                const ny = e.clientY / window.innerHeight;
-                document.querySelector('.blob-1').style.transform =
-                    `translate(${nx * 50}px, ${ny * 40}px)`;
-                document.querySelector('.blob-2').style.transform =
-                    `translate(${nx * -45}px, ${ny * -35}px)`;
-                document.querySelector('.blob-3').style.transform =
-                    `translate(${(nx - 0.5) * 60}px, ${(ny - 0.5) * 50}px)`;
-            });
+            const nx = e.clientX / window.innerWidth;
+            const ny = e.clientY / window.innerHeight;
+            document.querySelector('.blob-1').style.transform = `translate(${nx * 40}px, ${ny * 30}px)`;
+            document.querySelector('.blob-2').style.transform = `translate(${nx * -40}px, ${ny * -30}px)`;
         });
     </script>
 </body>
-</html>< ! - -   D e p l o y m e n t   F i x :   F o r c e   R e b u i l d   1   - - >  
- 
+</html>
