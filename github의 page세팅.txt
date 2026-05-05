@@ -1,0 +1,21 @@
+깃허브의 내 페이지 세팅 URL >>>--------------------------------
+https://github.com/CHANGONGE/LOADING-PAGE/settings/pages
+
+자동 업데이트: 아까 하신 설정은 "앞으로 main 브라우저에 새로운 내용이 올라오면(Push되면) 자동으로 웹사이트를 업데이트해라"라는 명령을 내린 것과 같습니다.
+워크플로우:
+로컬에서 파일을 수정한다.
+git add, commit, push를 실행한다. (제가 아까 해드린 작업)
+끝! 깃허브가 스스로 감지해서 약 1분 뒤에 웹사이트에 자동으로 반영해 줍니다.
+요약하자면:
+Pages 설정 페이지: 최초 1회만 설정하면 끝.
+수정 반영: 평소처럼 코드 수정 후 push만 하면 웹사이트 주소의 내용이 자동으로 바뀝니다.
+
+
+
+깃허브의 내 프로파일 URL >>>--------------------------------
+https://CHANGONGE.github.io/LOADING-PAGE/    또는   https://changonge.github.io/LOADING-PAGE/index.html
+https://changonge.github.io/LOADING-PAGE/Loading.html
+https://CHANGONGE.github.io/LOADING-PAGE/open.html
+
+
+Vercel 은 '내 페이지에 인터넷 주소를 달아 주는 무료 배달 서비스' 
