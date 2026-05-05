@@ -22,111 +22,46 @@
             overflow: hidden; 
         }
 
-        /* [2] 동적 배경 (original.html 사양) */
-        #bg {
-            position: fixed; inset: 0; z-index: 0; overflow: hidden;
-            background: radial-gradient(ellipse at 20% 20%, rgba(0,51,102,0.06) 0%, transparent 60%),
-                        radial-gradient(ellipse at 80% 80%, rgba(212,175,55,0.06) 0%, transparent 60%),
-                        #f2f5f9;
+        /* [2] 백업 파일의 기능: 애니메이션 배경 */
+        .bg-gradient {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; overflow: hidden;
         }
-        .blob {
-            position: absolute; border-radius: 50%;
-            filter: blur(80px); pointer-events: none; transition: transform 0.1s linear;
+        .bg-blob {
+            position: absolute; width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(0, 51, 102, 0.05) 0%, transparent 70%);
+            filter: blur(60px); border-radius: 50%;
+            animation: move 25s infinite alternate;
         }
-        .blob-1 {
-            width: 700px; height: 700px; top: -20%; left: -15%;
-            background: radial-gradient(circle, rgba(0,51,102,0.09) 0%, transparent 70%);
-            animation: drift1 28s ease-in-out infinite alternate;
-        }
-        .blob-2 {
-            width: 600px; height: 600px; bottom: -15%; right: -10%;
-            background: radial-gradient(circle, rgba(212,175,55,0.10) 0%, transparent 70%);
-            animation: drift2 35s ease-in-out infinite alternate;
-        }
-        .blob-3 {
-            width: 400px; height: 400px; top: 40%; left: 50%;
-            background: radial-gradient(circle, rgba(0,51,102,0.05) 0%, transparent 70%);
-            animation: drift3 22s ease-in-out infinite alternate;
-        }
-        @keyframes drift1 { to { transform: translate(80px, 60px) scale(1.15); } }
-        @keyframes drift2 { to { transform: translate(-70px, -50px) scale(1.1); } }
-        @keyframes drift3 { to { transform: translate(40px, -80px) scale(0.9); } }
+        .blob-1 { top: -10%; left: -10%; }
+        .blob-2 { bottom: -10%; right: -10%; background: radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, transparent 70%); animation-duration: 30s; }
 
-        /* [3] 로딩 레이어 고도화 (original.html 사양) */
-        #loader {
-            position: fixed; inset: 0; z-index: 9999;
-            background: #03090F;
-            display: flex; flex-direction: column;
-            justify-content: center; align-items: center; gap: 28px;
-            transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+        @keyframes move {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(100px, 50px) scale(1.1); }
         }
 
-        .loader-rings {
-            position: relative; width: 180px; height: 180px;
+        /* [3] 로딩 레이어 고도화 */
+        #loader-layer {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #05080A; z-index: 9999;
+            display: flex; justify-content: center; align-items: center;
+            transition: opacity 1s ease-out;
+        }
+        
+        .loader-wrapper {
+            position: relative; width: 200px; height: 200px;
             display: flex; justify-content: center; align-items: center;
         }
-        .ring {
-            position: absolute; border-radius: 50%;
-            border: 2px solid transparent;
-        }
-        .ring-1 {
-            width: 180px; height: 180px;
-            border-top-color: var(--accent-gold);
-            animation: spin 1.6s linear infinite;
-        }
-        .ring-2 {
-            width: 140px; height: 140px;
-            border-top-color: rgba(212, 175, 55, 0.5);
-            border-right-color: rgba(212, 175, 55, 0.2);
-            animation: spin 2.4s linear infinite reverse;
-        }
-        .ring-3 {
-            width: 100px; height: 100px;
-            border-top-color: rgba(212, 175, 55, 0.25);
-            animation: spin 3.2s linear infinite;
-        }
-        .ring-dot {
-            width: 6px; height: 6px; border-radius: 50%;
-            background: var(--accent-gold);
-            box-shadow: 0 0 12px var(--accent-gold), 0 0 24px rgba(212,175,55,0.4);
+
+        .circle-loader {
+            position: absolute; width: 100%; height: 100%;
+            border: 2px solid rgba(212, 175, 55, 0.1); border-top: 2px solid var(--accent-gold);
+            border-radius: 50%; animation: spin 1.5s linear infinite;
         }
 
-        .loader-text {
-            font-family: 'Cinzel', serif;
-            color: var(--accent-gold);
-            font-size: 1.1rem;
-            letter-spacing: 6px;
-            text-align: center;
-            line-height: 1.7;
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        .loader-sub {
-            color: rgba(255,255,255,0.3);
-            font-size: 0.65rem;
-            letter-spacing: 8px;
-            font-family: 'Cinzel', serif;
-            animation: pulse 2s ease-in-out infinite 0.5s;
-        }
-
-        /* 데이터 파티클 */
-        .particles {
-            position: absolute; inset: 0; pointer-events: none; overflow: hidden;
-        }
-        .particle {
-            position: absolute;
-            width: 1px; height: 1px;
-            background: var(--accent-gold);
-            border-radius: 50%;
-            opacity: 0;
-            animation: float-up var(--dur, 4s) linear var(--delay, 0s) infinite;
-        }
-        @keyframes float-up {
-            0%   { opacity: 0; transform: translateY(100vh) translateX(0); }
-            10%  { opacity: 0.6; }
-            90%  { opacity: 0.4; }
-            100% { opacity: 0; transform: translateY(-10vh) translateX(var(--drift, 20px)); }
-        }
+        .loader-content { text-align: center; font-family: 'Cinzel', serif; z-index: 10; }
+        .loader-content h1 { color: var(--accent-gold); font-size: 1.2rem; letter-spacing: 4px; margin: 0; animation: pulse 2s infinite; }
 
         /* [4] 메인 컨텐츠 등장 애니메이션 */
         #main-content {
@@ -203,24 +138,16 @@
 </head>
 <body>
 
-    <!-- 동적 배경 -->
-    <div id="bg">
-        <div class="blob blob-1"></div>
-        <div class="blob blob-2"></div>
-        <div class="blob blob-3"></div>
+    <div class="bg-gradient">
+        <div class="bg-blob blob-1"></div>
+        <div class="bg-blob blob-2"></div>
     </div>
 
-    <!-- 로딩 레이어 -->
-    <div id="loader">
-        <div class="particles" id="particles"></div>
-        <div class="loader-rings">
-            <div class="ring ring-1"></div>
-            <div class="ring ring-2"></div>
-            <div class="ring ring-3"></div>
-            <div class="ring-dot"></div>
+    <div id="loader-layer">
+        <div class="loader-wrapper">
+            <div class="circle-loader"></div>
+            <div class="loader-content"><h1>AI BUSINESS<br>ARCHITECT</h1></div>
         </div>
-        <div class="loader-text">AI BUSINESS<br>ARCHITECT</div>
-        <div class="loader-sub">INITIALIZING...</div>
     </div>
 
     <div id="main-content">
@@ -286,48 +213,29 @@
     </div>
 
     <script>
-        // 파티클 생성
-        const container = document.getElementById('particles');
-        for (let i = 0; i < 40; i++) {
-            const p = document.createElement('div');
-            p.className = 'particle';
-            p.style.cssText = `
-                left: ${Math.random() * 100}%;
-                width: ${Math.random() > 0.7 ? 2 : 1}px;
-                height: ${Math.random() > 0.7 ? 2 : 1}px;
-                --dur: ${3 + Math.random() * 5}s;
-                --delay: ${Math.random() * 4}s;
-                --drift: ${(Math.random() - 0.5) * 80}px;
-                opacity: 0;
-            `;
-            container.appendChild(p);
-        }
-
-        // 로딩 완료 후 전환
         window.addEventListener('load', () => {
+            const loader = document.getElementById('loader-layer');
+            
             setTimeout(() => {
-                const loader = document.getElementById('loader');
                 loader.style.opacity = '0';
-                loader.style.pointerEvents = 'none';
                 document.body.classList.add('loaded');
-                setTimeout(() => { loader.style.display = 'none'; }, 950);
-            }, 2200);
+                
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                }, 1000);
+            }, 2000); // 2초 로딩 후 전환
         });
 
-        // 마우스 반응 배경 블롭
-        let rafId;
+        // 마우스 움직임에 따른 배경 블롭 인터렉션
         document.addEventListener('mousemove', (e) => {
-            cancelAnimationFrame(rafId);
-            rafId = requestAnimationFrame(() => {
-                const nx = e.clientX / window.innerWidth;
-                const ny = e.clientY / window.innerHeight;
-                document.querySelector('.blob-1').style.transform =
-                    `translate(${nx * 50}px, ${ny * 40}px)`;
-                document.querySelector('.blob-2').style.transform =
-                    `translate(${nx * -45}px, ${ny * -35}px)`;
-                document.querySelector('.blob-3').style.transform =
-                    `translate(${(nx - 0.5) * 60}px, ${(ny - 0.5) * 50}px)`;
-            });
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            
+            const blob1 = document.querySelector('.blob-1');
+            const blob2 = document.querySelector('.blob-2');
+            
+            if(blob1) blob1.style.transform = `translate(${x * 30}px, ${y * 30}px)`;
+            if(blob2) blob2.style.transform = `translate(${x * -30}px, ${y * -30}px)`;
         });
     </script>
 </body>
