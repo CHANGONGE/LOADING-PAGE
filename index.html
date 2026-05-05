@@ -11,7 +11,7 @@
             --primary-navy: #05080A; /* 딥 다크 배경 */
             --accent-gold: #D4AF37;
             --text-main: #FFFFFF;
-            --text-muted: rgba(255, 255, 255, 0.85); /* 가독성 향상을 위해 선명도 강화 */
+            --text-muted: rgba(255, 255, 255, 0.6); /* 원래의 부드러운 톤으로 원복 */
             --glass-bg: rgba(255, 255, 255, 0.03);
             --glass-border: rgba(255, 255, 255, 0.1);
             --transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
@@ -202,10 +202,11 @@
         }
         .badge:hover { color: #fff; border-color: var(--accent-gold); background: rgba(212, 175, 55, 0.1); }
 
-        /* Professional Background */
+        /* Professional Background (가독성을 위해 여기만 특별히 선명하게 설정) */
         .exp-list { list-style: none; padding: 0 0 0 10px; margin: 0; }
         .exp-item { 
-            font-size: 13px; line-height: 2; color: var(--text-muted); margin-bottom: 8px;
+            font-size: 13.5px; line-height: 2; color: rgba(255, 255, 255, 0.95); /* 선명한 텍스트 */
+            margin-bottom: 8px;
             display: flex; gap: 10px; align-items: flex-start;
         }
         .exp-item::before { content: '✓'; color: var(--accent-gold); font-weight: bold; }
